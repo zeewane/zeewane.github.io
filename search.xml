@@ -1,0 +1,830 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  
+  
+    
+    <entry>
+      <title><![CDATA[2017-7-4]]></title>
+      <url>http://yoursite.com/2017/07/04/2017-7-4/</url>
+      <content type="html"><![CDATA[<h2 id="越来越暴躁的脾气"><a href="#越来越暴躁的脾气" class="headerlink" title="越来越暴躁的脾气"></a>越来越暴躁的脾气</h2><ul>
+<li>可能就像当初群里说的那样，我没有做好承担这个责任的准备，我接受不了也通过不了这个考验。</li>
+<li>懦弱和逃避</li>
+<li>越来越不喜欢你了，只是心里憋的慌，可能对你说出来就不会有这么讨厌你，但是的确是越来越讨厌你了</li>
+<li>可能缘分和感情就这么被一年的时光磨蚀了，就是这么的脆弱</li>
+<li>最后的不作为和刻意的让你讨厌让你恨，这样就不会太内疚了</li>
+<li>我有爱好只是你不喜欢，我也希望有人能支持我做我喜欢的事情</li>
+<li>我只是不喜欢你懒的要死，宅在家里，却对我的消费指手画脚</li>
+</ul>
+<h2 id="时间都去哪了"><a href="#时间都去哪了" class="headerlink" title="时间都去哪了"></a>时间都去哪了</h2><ul>
+<li>一周又一周的过，不知不觉已经这么久，时间都用到哪里了。</li>
+</ul>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[日志级别的选择]]></title>
+      <url>http://yoursite.com/2017/06/29/%E6%97%A5%E5%BF%97%E7%BA%A7%E5%88%AB%E7%9A%84%E9%80%89%E6%8B%A9/</url>
+      <content type="html"><![CDATA[<h1 id="日志信息分类"><a href="#日志信息分类" class="headerlink" title="日志信息分类"></a>日志信息分类</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>重构消息中心客户端走进了不少的坑，日志帮了很多忙也带来了性能的问题，合理的控制日志级别，网上找的这篇写的还不错，希望自己以后能照着来做。</p>
+<h2 id="1-等级"><a href="#1-等级" class="headerlink" title="1.等级"></a>1.等级</h2><p>由低到高：debug&lt;info&lt;warn&lt;Error&lt;Fatal;</p>
+<h2 id="2-区别："><a href="#2-区别：" class="headerlink" title="2.区别："></a>2.区别：</h2><p>debug 级别最低，可以随意的使用于任何觉得有利于在调试时更详细的了解系统运行状态的东东；</p>
+<p>info  重要，输出信息：用来反馈系统的当前状态给最终用户的；</p>
+<p>后三个，警告、错误、严重错误，这三者应该都在系统运行时检测到了一个不正常的状态。</p>
+<p>warn, 可修复，系统可继续运行下去；</p>
+<p>Error, 可修复性，但无法确定系统会正常的工作下去;</p>
+<p>Fatal, 相当严重，可以肯定这种错误已经无法修复，并且如果系统继续运行下去的话后果严重。</p>
+<h2 id="3-使用"><a href="#3-使用" class="headerlink" title="3.使用"></a>3.使用</h2><p>什么时候使用 info, warn , error ?</p>
+<p>info 用于打印程序应该出现的正常状态信息， 便于追踪定位；</p>
+<p>warn 表明系统出现轻微的不合理但不影响运行和使用；</p>
+<p>error 表明出现了系统错误和异常，无法正常完成目标操作。</p>
+<h2 id="4-格式"><a href="#4-格式" class="headerlink" title="4.格式"></a>4.格式</h2><p>总结起来， 错误日志格式可以为：</p>
+<p>log.error(“[接口名或操作名] [Some Error Msg] happens. [params] [Probably Because]. [Probably need to do].”);</p>
+<p>log.error(String.format(“[接口名或操作名] [Some Error Msg] happens. [%s]. [Probably Because]. [Probably need to do].”, params));</p>
+<p>或</p>
+<p>log.error(“[Some Error Msg] happens to 错误参数或内容 when [in some condition]. [Probably Because]. [Probably need to do].”);</p>
+<p>log.error(String.format(“[Some Error Msg] happens to %s when [in some condition]. [Probably Because]. [Probably need to do].”, parameters));</p>
+<p>[Probably Reason]. [Probably need to do]. 在某些情况下可以省略； 在一些重要接口和场景下最好能说明一下。</p>
+<p>每一条错误日志都是独立的，尽可能完整、具体、直接说明何种场景下发生了什么错误，由什么原因导致，要采用什么措施或步骤。</p>
+<h2 id="5-意义"><a href="#5-意义" class="headerlink" title="5.意义"></a>5.意义</h2><p>错误日志是排查问题的重要手段之一。 当我们编程实现一项功能时， 通常会考虑可能发生的各种错误及相应原因：</p>
+<p>要排查出相应的原因， 就需要一些关键描述来定位原因。这就会形成三元组：错误现象 -&gt; 错误关键描述 -&gt; 最终的错误原因。</p>
+<p>需要针对每一种错误尽可能提供相应的错误关键描述，从而定位到相应的错误原因。也就是说，编程的时候，要仔细思考， 哪些描述是非常有利于定位错误原因的， 尽可能将这些描述添加到错误日志中。</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[纪念即将逝去的多说]]></title>
+      <url>http://yoursite.com/2017/03/23/%E7%BA%AA%E5%BF%B5%E5%8D%B3%E5%B0%86%E9%80%9D%E5%8E%BB%E7%9A%84%E5%A4%9A%E8%AF%B4/</url>
+      <content type="html"></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[code tips]]></title>
+      <url>http://yoursite.com/2017/02/13/code-tips/</url>
+      <content type="html"><![CDATA[<ul>
+<li><p>对bean操作，有现成的工具类，apache的common-beanutils包</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>commons-beanutils<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-beanutils<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.9.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>对xml操作，有现成的工具类，dome4j很好用</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>dom4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>dom4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.6.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[bat批处理脚本简单使用]]></title>
+      <url>http://yoursite.com/2017/02/10/bat%E6%89%B9%E5%A4%84%E7%90%86%E8%84%9A%E6%9C%AC%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/</url>
+      <content type="html"><![CDATA[<h2 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h2><h3 id="echo-off"><a href="#echo-off" class="headerlink" title="@echo off"></a>@echo off</h3><p>这个是用来关闭代码回显的，本来在bat脚本执行中，所有的代码在运行过程中都会将代码打印在控制台上，<br>设置成echo off后，代码就不会打印在控制台上了，加上@符号，连echo off这句话也不会显示。</p>
+<h3 id="pause"><a href="#pause" class="headerlink" title="pause"></a>pause</h3><p>暂停功能，不写这个的话，代码会执行完后马上就退出控制台，一般的代码执行较快，直接就一闪而过，<br>加入pause后，会提示，按任意键继续，这样就暂停在这边了。</p>
+<h3 id="title"><a href="#title" class="headerlink" title="title"></a>title</h3><p>点击bat后弹出来的dos框的名字，记得用记事本打开bat脚本，然后另存为编码选择为ANSI，这样就可以<br>正常显示中文了，不然title里的中文是乱码的。</p>
+<h3 id="时间"><a href="#时间" class="headerlink" title="时间"></a>时间</h3><p>%date% 显示当前日期，会有周几的显示<br>%time% 显示当前的时间，精确到毫秒</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[北京第一天]]></title>
+      <url>http://yoursite.com/2017/01/31/%E5%8C%97%E4%BA%AC%E7%AC%AC%E4%B8%80%E5%A4%A9/</url>
+      <content type="html"><![CDATA[<p>14个小时的硬卧出乎意料的舒服，除了吃饭有点麻烦，床躺着还是很软很舒服的。</p>
+<p>故宫比想象中的要大的多，但是也只是一开始的兴奋，没有那么好玩。</p>
+<p>北京的地铁是真痛苦啊，换乘要走这么多的路。</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[出发去北京啦！]]></title>
+      <url>http://yoursite.com/2017/01/30/%E5%87%BA%E5%8F%91%E5%8E%BB%E5%8C%97%E4%BA%AC%E5%95%A6%EF%BC%81/</url>
+      <content type="html"><![CDATA[<p>下午就要去坐火车了，紧张，第一次出远门，还是带着家里这么多人一起，压力好大，希望一切顺利，我现在都还没研究过到了那边怎么玩，而且我手机要没流量了。</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[jacoco-ant执行脚本]]></title>
+      <url>http://yoursite.com/2017/01/03/jacoco-ant%E6%89%A7%E8%A1%8C%E8%84%9A%E6%9C%AC/</url>
+      <content type="html"><![CDATA[<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" ?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">name</span>=<span class="string">"Test"</span> <span class="attr">xmlns:jacoco</span>=<span class="string">"antlib:org.jacoco.ant"</span> <span class="attr">default</span>=<span class="string">"jacoco"</span>&gt;</span></div><div class="line">    <span class="comment">&lt;!--Jacoco的安装路径--&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"jacocoantPath"</span> <span class="attr">value</span>=<span class="string">"/usr/jacoco/lib/jacocoant.jar"</span>/&gt;</span></div><div class="line">  <span class="comment">&lt;!--最终生成.exec文件的路径，Jacoco就是根据这个文件生成最终的报告的--&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"jacocoexecPath"</span> <span class="attr">value</span>=<span class="string">"/home/work/local/hundsun/workspace/wg_merchant_oc_regression/jacoco.exec"</span>/&gt;</span></div><div class="line">    <span class="comment">&lt;!--生成覆盖率报告的路径，直接放在tomct下面，外界直接访问--&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"reportfolderPath"</span> <span class="attr">value</span>=<span class="string">"/root/Tomcat_test/webapps/report"</span>/&gt;</span></div><div class="line">  <span class="comment">&lt;!--远程tomcat服务的ip地址--&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"server_ip"</span> <span class="attr">value</span>=<span class="string">"127.0.0.1"</span>/&gt;</span></div><div class="line">  <span class="comment">&lt;!--前面配置的远程tomcat服务打开的端口，要跟上面配置的一样--&gt;</span></div><div class="line">  <span class="comment">&lt;!--这个端口有别于tomcat的端口，相当于是嵌在tomcat里的监视器--&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"server_port"</span> <span class="attr">value</span>=<span class="string">"8088"</span>/&gt;</span></div><div class="line">  <span class="comment">&lt;!--源代码路径--&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"checkOrderSrcpath"</span> <span class="attr">value</span>=<span class="string">"/root/LoginDemo4/src/main/java/"</span> /&gt;</span></div><div class="line">  <span class="comment">&lt;!--可以配置多个源代码，源代码的路径就是src/main/java下面--&gt;</span></div><div class="line"></div><div class="line"></div><div class="line">  <span class="comment">&lt;!--.class文件路径--&gt;</span></div><div class="line">  <span class="comment">&lt;!--跑的是class，标注的是源码？--&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"checkOrderClasspath"</span> <span class="attr">value</span>=<span class="string">"/root/LoginDemo4/target/classes/com/hundsun"</span> /&gt;</span></div><div class="line"></div><div class="line">  <span class="comment">&lt;!--让ant知道去哪儿找Jacoco--&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">taskdef</span> <span class="attr">uri</span>=<span class="string">"antlib:org.jacoco.ant"</span> <span class="attr">resource</span>=<span class="string">"org/jacoco/ant/antlib.xml"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">classpath</span> <span class="attr">path</span>=<span class="string">"$&#123;jacocoantPath&#125;"</span> /&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">taskdef</span>&gt;</span></div><div class="line"></div><div class="line">  <span class="comment">&lt;!--dump任务:</span></div><div class="line">      根据前面配置的ip地址，和端口号，</div><div class="line">      访问目标tomcat服务，并生成.exec文件。--&gt;</div><div class="line">  <span class="tag">&lt;<span class="name">target</span> <span class="attr">name</span>=<span class="string">"dump"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">jacoco:dump</span> <span class="attr">address</span>=<span class="string">"$&#123;server_ip&#125;"</span> <span class="attr">reset</span>=<span class="string">"false"</span> <span class="attr">destfile</span>=<span class="string">"$&#123;jacocoexecPath&#125;"</span> <span class="attr">port</span>=<span class="string">"$&#123;server_port&#125;"</span> <span class="attr">append</span>=<span class="string">"true"</span>/&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">target</span>&gt;</span></div><div class="line">  </div><div class="line">  <span class="comment">&lt;!--jacoco任务:</span></div><div class="line">      根据前面配置的源代码路径和.class文件路径，</div><div class="line">      根据dump后，生成的.exec文件，生成最终的html覆盖率报告。--&gt;</div><div class="line">  <span class="tag">&lt;<span class="name">target</span> <span class="attr">name</span>=<span class="string">"report"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">delete</span> <span class="attr">dir</span>=<span class="string">"$&#123;reportfolderPath&#125;"</span> /&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">mkdir</span> <span class="attr">dir</span>=<span class="string">"$&#123;reportfolderPath&#125;"</span> /&gt;</span></div><div class="line">      </div><div class="line">      <span class="tag">&lt;<span class="name">jacoco:report</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">executiondata</span>&gt;</span></div><div class="line">              <span class="tag">&lt;<span class="name">file</span> <span class="attr">file</span>=<span class="string">"$&#123;jacocoexecPath&#125;"</span> /&gt;</span></div><div class="line">          <span class="tag">&lt;/<span class="name">executiondata</span>&gt;</span></div><div class="line">              </div><div class="line">          <span class="tag">&lt;<span class="name">structure</span> <span class="attr">name</span>=<span class="string">"JaCoCo Report"</span>&gt;</span></div><div class="line">              <span class="tag">&lt;<span class="name">group</span> <span class="attr">name</span>=<span class="string">"Check Order related"</span>&gt;</span>           </div><div class="line">                  <span class="tag">&lt;<span class="name">classfiles</span>&gt;</span></div><div class="line">                      <span class="tag">&lt;<span class="name">fileset</span> <span class="attr">dir</span>=<span class="string">"$&#123;checkOrderClasspath&#125;"</span> /&gt;</span></div><div class="line">                  <span class="tag">&lt;/<span class="name">classfiles</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">sourcefiles</span> <span class="attr">encoding</span>=<span class="string">"gbk"</span>&gt;</span></div><div class="line">                      <span class="tag">&lt;<span class="name">fileset</span> <span class="attr">dir</span>=<span class="string">"$&#123;checkOrderSrcpath&#125;"</span> /&gt;</span></div><div class="line">                  <span class="tag">&lt;/<span class="name">sourcefiles</span>&gt;</span></div><div class="line">              <span class="tag">&lt;/<span class="name">group</span>&gt;</span></div><div class="line">          <span class="tag">&lt;/<span class="name">structure</span>&gt;</span></div><div class="line"></div><div class="line">          <span class="tag">&lt;<span class="name">html</span> <span class="attr">destdir</span>=<span class="string">"$&#123;reportfolderPath&#125;"</span> <span class="attr">encoding</span>=<span class="string">"utf-8"</span> /&gt;</span>         </div><div class="line">      <span class="tag">&lt;/<span class="name">jacoco:report</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">target</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></div></pre></td></tr></table></figure>]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[2016总结]]></title>
+      <url>http://yoursite.com/2017/01/01/2016%E6%80%BB%E7%BB%93/</url>
+      <content type="html"><![CDATA[<h2 id="Perface"><a href="#Perface" class="headerlink" title="Perface"></a>Perface</h2><p>2016年马上就要结束了，这可能是我活到现在最跌宕起伏的一年，这一年里发生了太多太多的事情，做了太多太多的抉择，时间按下了一个快进键。</p>
+<h2 id="Part-1"><a href="#Part-1" class="headerlink" title="Part 1"></a>Part 1</h2><p>这个学期初突然发现有机会去争取奖学金，大三上我以为考的很差劲，但是离三等最低的那条线也没有差很远，大三下也是我最后的机会去努力，同时为接下来的实习找工作做准备。大三上，大概2015年12月的时候拿了一个外包比赛的奖，以为牛逼的不得了，毕竟之前什么学科竞赛啊科研都没接触过，唯一做过的系统还是大三开始前的那个短学期的系统，那时候虽然也是一知半解，大部份都是靠着问石薪林才完成，但是这的确是第一次亲手完成比较大的系统。 </p>
+<p>不过年初的寒假是最有价值的一个寒假，也让我大三下的学习容易了些。在那个寒假里我下载了毕向东的javaEE基础视频，开始对着视频学习，敲代码。那时候寒假给自己定了个目标，每天敲500行代码，学习一天的视频课程，然后坚定的买了一本书，thinking in java，这也是我入坑的第一本书。买书和买鞋一样有毒，关键是买书我总能够说服自己，这是计算机的书啊，对自己吃饭的家伙有用啊，我看了就会很屌很酷，鞋子虽然也很酷，但是不是刚需，只是心里难受点而已，毕竟当初没买的科8，现在已是天价。然而其实买的书都不怎么会看，翻了几页就扔在那边，今年在买书上也花了一两千块钱，真的翻过的其实没几本，阅读的习惯还是需要养成，以后离不开阅读的。</p>
+<p>那个寒假最后坚持到底的只有看视频，但是进度比自己想象的要慢很多，最后拖到了开学后才看完，那个寒假一直坚持天天看，天天敲，对面向对象的了解是深了，但是也只是理解了个概念，后来是真的要去写一个系统试试才知道为什么要这么写的。学会知识是一步，会用知识是第二步。最好的学习就是项目驱动。</p>
+<p>然后就进入了大三下的学习，我雄心壮志，外包省赛拿个奖，同时申请个科研和国创，一举走上巅峰。现在想想真是naive，最后啥也没干成，太高估自己了，执行力有很大问题，以及最重要的，不知道怎么从头开始去做一个系统。</p>
+<p>大三下最重要的也是最有用的一个决定，就是去了移动互联网实验室，坚持了一个学期，还好没待在寝室等死。</p>
+<h2 id="Part-2"><a href="#Part-2" class="headerlink" title="Part 2"></a>Part 2</h2><p>接下来就是考研，突发奇想，想去考研，考个杭电的专硕，找工作会好找点，当然我还是太高估了自己的执行力，非常之差，兴冲冲的买了一堆考研的书，花了两个晚上拍脑袋决定考研，专硕没那么难，不考研是人生是不完整的。<br>然后就傻逼了，其实数学是真的一点都看不进去，一个月也就翻了几页。所幸的是在此之前我一直在投实习生的简历，积极参加笔试，网上的全挂了，后来投了个恒生的，去杭电笔试，通宵准备最后给我通过了，通知我去面试。<br>那时候面试本来不想去了，坚定的认为我是杭电未来的研究生，最后还是去玩了一下，其实自己那时候内心深处考研是有动摇的，考研准备的过程让我想起了我高三最后的那段回家自己复习的时光，那是有点自欺欺人的意思。<br>最后还是去面试了，因为本来就是抱着无所谓的态度，毕竟考研是主业，然后去了以后打击不小，基本上啥问题都没回答出来，和其他人一比自己简直太low太low，这也更加坚定了自己考研的计划，我现在的实力是找不到工作的。</p>
+<p>但是没想到最后居然给我通过了，待遇还相当不错，这个就再次动摇了，也再次给我放弃考研增加了筹码。我一直没拒绝这个实习生录取通知书，后来看到实习生的名单，我是最后一名，其他都是名校，就我一个三本。<br>最后还是在7月10号那天选择了实习生报到，开始了实习。</p>
+<p>这是一个很痛苦的挣扎，我的脑袋还在意淫骗我去考研，但是我之前的经历让我知道实习是一个更好的机会，幸运的是，这次的选择，没有选错。</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[权限控制模型]]></title>
+      <url>http://yoursite.com/2016/10/13/%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6%E6%A8%A1%E5%9E%8B/</url>
+      <content type="html"><![CDATA[<h2 id="最原始的权限模型（Role-Based-Access-Control）"><a href="#最原始的权限模型（Role-Based-Access-Control）" class="headerlink" title="最原始的权限模型（Role Based Access Control）"></a>最原始的权限模型（Role Based Access Control）</h2><p>用户-角色-权限，三者分别都是多对多的关系，所以抽出来两张表，关系结构为：</p>
+<ul>
+<li>用户表</li>
+<li>用户-角色对应表</li>
+<li>角色表</li>
+<li>角色-权限对应表</li>
+<li>权限表<br><img src="http://images.cnitblog.com/blog/453361/201406/171745032391082.png" alt="image"></li>
+</ul>
+<h3 id="哪里不好"><a href="#哪里不好" class="headerlink" title="哪里不好"></a>哪里不好</h3><p>这个模型能够适应基本的权限控制情况，但是组织结构一旦复杂，这个就不够用了。</p>
+<p>情况：一些权限控制不应该到业务层去实现，也不可能一直去添加角色，同样是项目经理，对应的是不同的项目，对于资源的划分就变的很麻烦了，每个资源都要去划分。而且按钮和菜单应该怎么去做。等用户量大的时候，一个一个的赋予角色就麻烦了，而且这个角色也会有很多个，不利于管理和维护，角色如何去分层次。</p>
+<p>如何做到字段级别的权限控制？</p>
+<h2 id="改进版本1"><a href="#改进版本1" class="headerlink" title="改进版本1"></a>改进版本1</h2><p>加入组织表。</p>
+<p>这个版本主要是解决组织之间的角色关系，以及方便对整个用户组里的用户赋权。</p>
+<p>用户组织也是有权限的，把用户分组，因为一些权限是直接根据组来的，组织也有角色，也对应着权限，这样直接赋权限的时候就会方便点，加入这个组织就可以了。</p>
+<p>个人的权限 = 自己拥有的角色的权限 + 组织角色拥有的权限</p>
+<p><img src="http://images.cnitblog.com/blog/453361/201406/180839130203826.png" alt="image"></p>
+<h3 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h3><ul>
+<li>组织也分上下级的关系，因为是树形结构，那么是不是涉及到权限的继承？</li>
+<li>不对，组织到底是个怎么样的概念，是协同上的那种树形结构，</li>
+</ul>
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><ul>
+<li>用户组织，如技术研发部、平台研发部，这些都是平行的组织，对应着自己组织的权限，可是这样和直接赋给这个人，xx成员的角色有什么区别？</li>
+<li>区别在于，用户组织，其实是一个很多角色的组合，里面包含着很多角色和权限，避免去一次一次的重复给组内的需要的角色</li>
+<li>但是假如这种情况，一个组内，也是有不同的等级的，比如项目组长、普通员工和实习生，这三者的权限又是不一样的。这个好像又回到之前那个模型的问题了</li>
+<li>组织只能适用于一些宽泛的场景，比如大家都是研发中心的员工，这个自然是和客服中心区分开来了；</li>
+<li>这个组织存在的意义是什么？就是一个大的角色而已，不对不是一个角色，这个组织可以有多个角色</li>
+<li><del>角色挂在组织下，组织就是角色组，角色组也可以不参与角色分配，只是为了看起来能够更加清晰？？对，可以这样做</del></li>
+</ul>
+<h3 id="角色和用户组有什么区别"><a href="#角色和用户组有什么区别" class="headerlink" title="角色和用户组有什么区别"></a>角色和用户组有什么区别</h3><ul>
+<li>角色是一组权限的集合</li>
+<li>用户组是一组角色的集合？<del>也不一定，也可以作为一个大的角色赋给全部人，方便统一处理</del>，用户组就是一组用户的集合，这一群用户是一个组织，给组织赋权就是给组织内的全部用户赋权</li>
+<li><del>角色组的出现，一是为了让组织结构看起来更加清晰，二是方便统一的对某个组织进行权限的控制</del>，不对，角色组和用户组是两个概念！！</li>
+<li>用户组在一些时候，其实就是一个大的角色</li>
+<li></li>
+</ul>
+<h2 id="改进版本2"><a href="#改进版本2" class="headerlink" title="改进版本2"></a>改进版本2</h2><p>改进权限表，把菜单、页面元素等东西列出来。</p>
+<p><img src="http://images.cnitblog.com/blog/453361/201406/180839146928369.png" alt="image"></p>
+<p>要解决的问题是，资源和权限操作并不好区分。</p>
+<p>要控制的资源，主要有：菜单，页面上的各种元素如按钮，文件，以及还有一个就是url访问的页面需要进行控制</p>
+<ul>
+<li>不同用户拥有的菜单不同</li>
+<li>可以看到的页面元素也不同</li>
+<li>可以访问的文件也不同</li>
+<li>可以直接访问的页面也不同，一些页面需要有特定的权限才可以访问</li>
+</ul>
+<p>前三者基本上就一个查的权限，最后一个涉及的较多，可以用url来进行区分和控制</p>
+<p>权限表给一个类型，来判断这个权限id对应的是哪个类型的资源</p>
+<p>这样是不是就解决了菜单控制的问题？</p>
+<p>这样设计会更加便于拓展，有什么新的资源或者其他的东西需要进行权限控制，只要再添加一张关联表和资源表就行</p>
+<p>页面元素怎么放里面？给编码，每个元素都有一个编码，使用一定的命名形式</p>
+<p>查出来的权限有哪些？其实就角色和权限id，全部的id都放在authorizationInfo中，info是个集合，渲染页面的时候会去遍历这个集合，如果有就渲染出来，但是页面元素这种资源不能太多，某些关键的按钮和表单，用jsp的hasPermission标签的形式就可以做到</p>
+<p>完整数据库设计：<br><img src="http://images.cnitblog.com/blog/453361/201406/180839166929713.png" alt="image"></p>
+<h3 id="角色组"><a href="#角色组" class="headerlink" title="角色组"></a>角色组</h3><p>角色组不给权限，只是作为一个分上下级的东西，或者其他的结构？这个不参与权限的分配，所以这个才是最重要的，用户组只是为了方便操作，这个才是直观的部门分层</p>
+<p>使用场景：</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h3 id="添加了一个用户组的概念"><a href="#添加了一个用户组的概念" class="headerlink" title="添加了一个用户组的概念"></a>添加了一个用户组的概念</h3><p>用户组就是一组用户的集合，当给用户组赋予角色的时候，整个组内的成员都会获得这个角色以及它的权限。这样就方便了加减角色的操作，当用户量足够大的时候，就不用去挨个赋权。</p>
+<p>好像很鸡肋，又回到了一开始，用户组就是一个大角色的概念，没什么存在的意义。除了一次性的给多个用户赋角色。</p>
+<p>所以用户的权限 = 用户组的权限 + 用户自身有的角色权限</p>
+<h3 id="把权限表细化"><a href="#把权限表细化" class="headerlink" title="把权限表细化"></a>把权限表细化</h3><p>权限分很多种，操作也是一种权限，不仅仅是那些静态的资源才有权限。所以在权限表中加入一个type字段，表明这个是什么类型的权限，是menu的还是file的，或者是control的，然后每个对应的type都单独拿出去作为一张表，这样就可以把操作和静态资源看做是一个东西来进行管理。</p>
+<h3 id="加入角色组的概念"><a href="#加入角色组的概念" class="headerlink" title="加入角色组的概念"></a>加入角色组的概念</h3><p>角色组是不参与权限的分配的，只是拿来进行组织结构的划分，划分的结构可以是树形结构。</p>
+<h3 id="声明"><a href="#声明" class="headerlink" title="声明"></a>声明</h3><ul>
+<li>一个用户只能属于一个用户组</li>
+<li>用户组有继承机制，但是只能有一个父用户组</li>
+<li>一个用户组可以有多个角色和权限</li>
+<li>权限是不能直接赋给用户的，需要去创建一个角色，把权限赋给角色，然后角色赋给用户，这样的方式去进行授权操作</li>
+<li>用户的权限信息，包括permission和role这两种</li>
+<li>（应该加入一个权限互斥组）！不然一些情况没办法实现</li>
+</ul>
+<h2 id="使用场景模拟"><a href="#使用场景模拟" class="headerlink" title="使用场景模拟"></a>使用场景模拟</h2><h3 id="场景一"><a href="#场景一" class="headerlink" title="场景一"></a>场景一</h3><ul>
+<li>大家都是研发中心的员工，和客服中心的员工的基础权限是不一样的，比如研发中心的可以访问需求网站并且下载文档，客服中心的可以访问客户沟通网站</li>
+</ul>
+<p>答：划分好权限后，把权限赋给角色，分别是需求网站访问者、文档下载者和客户沟通网站访问者。研发中心和客服中心就是两个不同的用户组，这三个角色赋给用户组后，组内的全部用户就都有了这个角色，都有了对应的权限。</p>
+<h3 id="场景二"><a href="#场景二" class="headerlink" title="场景二"></a>场景二</h3><ul>
+<li>研发中心的全部用户对这个页面有读的权限，里面的主管用户对这个页面有读和写的权限  </li>
+</ul>
+<p>答：直接在权限type为功能操作那边进行拦截，写是一个角色A，读是一个角色B，对应着相应的权限，角色A赋给研发中心用户组，角色B赋给主管，这样就完成了这个场景</p>
+<h3 id="场景三"><a href="#场景三" class="headerlink" title="场景三"></a>场景三</h3><ul>
+<li>用户都有访问这个页面的权限，但是不同的用户看到的菜单和页面元素不同</li>
+</ul>
+<p>答：首先菜单和页面元素全部被划分成资源，放到权限表外联的表中，在用户登录进行授权的时候，这些对应的权限id就全部被写入到用户的权限信息中，渲染页面的时候就会去遍历用户的权限信息，有哪些就显示哪些。</p>
+<h3 id="场景四"><a href="#场景四" class="headerlink" title="场景四"></a>场景四</h3><ul>
+<li>总经理临时需要加一个权限</li>
+</ul>
+<p>答：那就去新建一个角色，把这个权限赋给这个角色，然后把角色添加给总经理用户，这样就完成了授权。</p>
+<h3 id="场景五"><a href="#场景五" class="headerlink" title="场景五"></a>场景五</h3><ul>
+<li>用户个人角色的权限和用户组权限冲突，比如实习生也算是挂在研发中心下面的，但是权限和正式员工不同，协同上一些信息是没有访问权限的，这个如何处理</li>
+</ul>
+<p>答：这个模型不应该出现权限冲突的情况，有就是有，没有就是没有。如果用户组有，个人角色没有，那就是有；如果用户组没有，个人角色有，那还是有。如果个人不应该有组织的某个角色，那就直接不能加入这个组织，因为组织的基础角色和他不符。所以用户组的权限需要是最基础的通用的权限。</p>
+<p><strong>需要加入一个约束机制，冲突的角色应该只能添加一个。</strong></p>
+<h3 id="场景六"><a href="#场景六" class="headerlink" title="场景六"></a>场景六</h3><ul>
+<li>用户组如何去分级和继承权限</li>
+</ul>
+<p>答：整个研发中心有研发中心的权限A，客服中心有权限B，研发中心下面的技术研发部的权限为a，平台研发部的权限为b，客服中心下面的维护中心的权限为c，那么技术研发部的用户的权限 = A + a + 自己本身；同理。</p>
+<h3 id="场景七"><a href="#场景七" class="headerlink" title="场景七"></a>场景七</h3><ul>
+<li>每个人只能查看自己的工资信息，这个应该如何实现？</li>
+</ul>
+<p>答：应该在业务层实现，查工资这个权限应该在小组中就定义好【查工资者】这一个角色，然后在执行查工资的操作的时候，传入id，返回个人的工资信息并显示。</p>
+<h3 id="场景八"><a href="#场景八" class="headerlink" title="场景八"></a>场景八</h3><ul>
+<li>要取消组内的某个人的权限，这个权限来自于用户组，如何操作</li>
+</ul>
+<p>答：直接把这个人移出组？感觉不对，难道要为了他去特地创建一个角色，可是只能这么做，把这个角色从他身上取掉，退出这个用户组，然后给他一个阉割过的角色。</p>
+<h3 id="场景九"><a href="#场景九" class="headerlink" title="场景九"></a>场景九</h3><ul>
+<li>父用户组有的功能，但是下面的子用户组需要禁止这个权限，如何操作？</li>
+</ul>
+<p>答：参考场景五。分组的时候就需要考虑到这个问题，那样的话这个模型是不是就有问题了。</p>
+<p>网上的回答是：1、加入互斥角色；2、有一个基数约束（领导的数量是有限的）；3、有先决条件角色（你想当技术专家，你首先必须是高级工程师，需要获得低一级的角色权限）；4、运行时互斥。</p>
+<p>好像已经背离了基于资源的权限控制，现在就是基于角色的，所以问题很大。但是角色其实就是资源权限的一个封装啊，就是一个权限的集合，只是为了更加符合人类思考的常理，不可能去后面拖着一堆权限，最后组装成permission的时候，其实也是根据角色去查询具体的权限的啊，这个是系统框架层次需要去思考的问题，现在只是一个数据库设计而已，依旧可以通过user-role-permission三表来查询到user的permission。</p>
+<p>现在的问题在于如何去取消权限</p>
+<h2 id="问石磊"><a href="#问石磊" class="headerlink" title="问石磊"></a>问石磊</h2><p>模型更改，加入部门的概念，不能用用户组来模拟部门，部门不应该有权限，只是一个逻辑上的分区</p>
+<h3 id="新模型要点"><a href="#新模型要点" class="headerlink" title="新模型要点"></a>新模型要点</h3><ul>
+<li><del>用户组可以继承，继承的是父类的角色</del></li>
+<li>用户组和角色之间的关系是：用户组只能有一个角色，角色可以赋给多个用户组</li>
+<li>用户可以单独赋予权限</li>
+<li>一个用户可以加入多个用户组</li>
+<li>取消权限是一个灾难，一旦涉及到取消，就要把用户移出当前用户组，其实可以解决啊！！要做的操作比较少的</li>
+<li>是否存在权限冲突的情况（不是很想的到场景）</li>
+<li>关键在于用户组的分类，之前想的是把用户组作为有相同角色的全部用户的集合，想一起方便的赋权，但是这样就违背了组织本来的概念。现在把用户组通过部门来进行管理，部门不涉及权限。</li>
+<li>但是如果用户组下面还有用户组的话，是不是就会有问题。用户组的表应该怎么设计，部门的表又应该怎么设计？是不是应该去取消用户组的继承，部门的东西全部在部门的逻辑分组中完成，<del>一个用户组只能属于一个部门</del>，用户组下面只有用户。但是这样设计的话，就没有一级一级继承下来的意思了，或者说本来就不应该有这个想法，继承不应该是在这边继承，换个角度去思考，因为一个用户可以加入多个用户组，所以用户可以继承到多个角色，虽然没有一级级的角色继承，你是研发中心的员工，所以有研发中心的员工的基础权限，你是研发中心的技术研发部的员工，所以有技术研发部的权限 + 研发中心的基础权限，这样就是一种继承。如果换成现在这种模型，就是部门下面会有部门和用户组，你又是研发中心的普通员工，也是技术研发部的普通员工，所以你有这两个用户组的角色，<strong>所以用户会和用户组有一个多对多的对应表</strong>。</li>
+<li>首先，<strong>没有人是可以游离于组织之外的</strong>，每个人都至少属于一个组织，实习生属于实习生的组织 + 实习生所在的部门的组织，用户组的概念要更正，用户组首先是一个用户的集合，其次他本身拥有一个角色，有等级的角色，如，基础角色A，中级角色B，高级角色C，终极角色D，首先全部人都有基础角色A，正式员工会加一个B角色，高级员工再加个C，以此类推。</li>
+<li>要明确，这个是数据库设计，不是框架层次的设计，一些业务上的东西应该交给框架或者是业务代码去实现。</li>
+<li>为什么不能给用户组赋予多个角色？没必要</li>
+</ul>
+<h3 id="常用场景模拟"><a href="#常用场景模拟" class="headerlink" title="常用场景模拟"></a>常用场景模拟</h3><ul>
+<li>实习生转正了</li>
+</ul>
+<p>答：给他加入到中级用户组即可。</p>
+<ul>
+<li>换了一个组织，从技术研发部到了公共支持部 </li>
+</ul>
+<p>答：直接把用户的用户组更改一下，放到另外一个部门下的用户组里就行</p>
+<p>- </p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[springmvc注解整理]]></title>
+      <url>http://yoursite.com/2016/10/08/springmvc%E6%B3%A8%E8%A7%A3%E6%95%B4%E7%90%86/</url>
+      <content type="html"><![CDATA[<h2 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h2><p>什么是注解？</p>
+<h3 id="起步"><a href="#起步" class="headerlink" title="起步"></a>起步</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- 注解驱动的方式，不用再去写映射器和适配器，也自动导入了json的转换器 --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">mvc:annotation-driven</span> <span class="attr">validator</span>=<span class="string">"validator"</span> /&gt;</span></div></pre></td></tr></table></figure>
+<h2 id="注解整理"><a href="#注解整理" class="headerlink" title="注解整理"></a>注解整理</h2><h3 id="Controller"><a href="#Controller" class="headerlink" title="Controller"></a>Controller</h3><p>声明这是一个controller，配置了组件扫描之后会自动去找有这个注解的类。</p>
+<p>在springmvc的配置文件中加入组件扫描。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- 组件扫描 --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">context:component-scan</span> <span class="attr">base-package</span>=<span class="string">"com.hundsun.ssm.controller"</span> /&gt;</span></div></pre></td></tr></table></figure></p>
+<h3 id="RequestMapping"><a href="#RequestMapping" class="headerlink" title="RequestMapping"></a>RequestMapping</h3><p>一个url路径。同时里面也可以有参数，可以去限制请求方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 只能通过post方法来请求</span></div><div class="line"><span class="meta">@RequestMapping</span>(value=<span class="string">"items"</span>,method=&#123;RequestMethod.POST&#125;)</div></pre></td></tr></table></figure>
+<h3 id="Autowired"><a href="#Autowired" class="headerlink" title="Autowired"></a>Autowired</h3><p>自动装配，有了这个就不用去给每次的注入添加set方法。</p>
+<h3 id="RequestBody"><a href="#RequestBody" class="headerlink" title="RequestBody"></a>RequestBody</h3><p>请求的格式为json格式。</p>
+<h4 id="ajax请求"><a href="#ajax请求" class="headerlink" title="ajax请求"></a>ajax请求</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//请求json，输出是json</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">requestJson</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	</div><div class="line">  $.ajax(&#123;</div><div class="line">    type:<span class="string">'post'</span>,</div><div class="line">    url:<span class="string">'$&#123;pageContext.request.contextPath&#125;/requestJson.action'</span>,</div><div class="line">    contentType:<span class="string">'application/json;charset=utf-8'</span>,</div><div class="line">    <span class="comment">//数据格式是json串，商品信息</span></div><div class="line">    data:<span class="string">'&#123;"name":"手机","price":999&#125;'</span>,</div><div class="line">    success:<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;<span class="comment">//返回json结果</span></div><div class="line">        alert(data);</div><div class="line">    &#125;</div><div class="line">  &#125;);</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="controller接收处理请求"><a href="#controller接收处理请求" class="headerlink" title="controller接收处理请求"></a>controller接收处理请求</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/requestJson"</span>)</div><div class="line"><span class="keyword">public</span> <span class="meta">@ResponseBody</span> <span class="function">ItemsCustom <span class="title">requestJson</span><span class="params">(@RequestBody ItemsCustom itemsCustom)</span></span>&#123;</div><div class="line">    <span class="comment">// do something...</span></div><div class="line">    </div><div class="line">    <span class="keyword">return</span> itemsCustom;	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="ResponseBody"><a href="#ResponseBody" class="headerlink" title="ResponseBody"></a>ResponseBody</h3><p>响应的格式为json格式。</p>
+<h4 id="ajax请求-1"><a href="#ajax请求-1" class="headerlink" title="ajax请求"></a>ajax请求</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//请求key/value，输出是json</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">responseJson</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	</div><div class="line">  $.ajax(&#123;</div><div class="line">    type:<span class="string">'post'</span>,</div><div class="line">    url:<span class="string">'$&#123;pageContext.request.contextPath&#125;/responseJson.action'</span>,</div><div class="line">    <span class="comment">//请求是key/value这里不需要指定contentType，因为默认就 是key/value类型</span></div><div class="line">    <span class="comment">//contentType:'application/json;charset=utf-8',</span></div><div class="line">    <span class="comment">//数据格式是json串，商品信息</span></div><div class="line">    data:<span class="string">'name=手机&amp;price=999'</span>,</div><div class="line">    success:<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;<span class="comment">//返回json结果</span></div><div class="line">        alert(data.name);</div><div class="line">    &#125;</div><div class="line">  &#125;);</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="controller接收处理"><a href="#controller接收处理" class="headerlink" title="controller接收处理"></a>controller接收处理</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 返回的是json，输入的是key/value格式</span></div><div class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/responseJson"</span>)</div><div class="line"><span class="keyword">public</span> <span class="meta">@ResponseBody</span> <span class="function">ItemsCustom <span class="title">responseJson</span><span class="params">(ItemsCustom itemsCustom)</span></span>&#123;</div><div class="line">    <span class="comment">// do something...</span></div><div class="line">    <span class="keyword">return</span> itemsCustom;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="ModelAttribute"><a href="#ModelAttribute" class="headerlink" title="ModelAttribute"></a>ModelAttribute</h3><h3 id="Validated"><a href="#Validated" class="headerlink" title="Validated"></a>Validated</h3><p>分组的时候用。</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[fastjson试用]]></title>
+      <url>http://yoursite.com/2016/09/21/fastjson%E8%AF%95%E7%94%A8/</url>
+      <content type="html"><![CDATA[<h2 id="什么是fastjson"><a href="#什么是fastjson" class="headerlink" title="什么是fastjson"></a>什么是fastjson</h2><p>Fastjson是一个Java语言编写的高性能功能完善的JSON库。它采用一种“假定有序快速匹配”的算法，把JSON Parse的性能提升到极致，是目前Java语言中最快的JSON库。Fastjson接口简单易用，已经被广泛使用在缓存序列化、协议交互、Web输出、Android客户端等多种应用场景。</p>
+<h2 id="简单的小例子"><a href="#简单的小例子" class="headerlink" title="简单的小例子"></a>简单的小例子</h2><h3 id="pom依赖"><a href="#pom依赖" class="headerlink" title="pom依赖"></a>pom依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- fastjson --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>fastjson<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.17<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
+<h3 id="User-java"><a href="#User-java" class="headerlink" title="User.java"></a>User.java</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.hundsun.shiro.JsonTest;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * user实体类</div><div class="line"> * </div><div class="line"> * <span class="doctag">@author</span> zeewane</div><div class="line"> * <span class="doctag">@date</span> 2016年9月21日 下午3:40:41</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> Long id;</div><div class="line">	<span class="keyword">private</span> String name;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> Long <span class="title">getId</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> id;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setId</span><span class="params">(Long id)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.id = id;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> name;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.name = name;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="Group-java"><a href="#Group-java" class="headerlink" title="Group.java"></a>Group.java</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.hundsun.shiro.JsonTest;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"><span class="keyword">import</span> java.util.ArrayList;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * group的实体类</div><div class="line"> * </div><div class="line"> * <span class="doctag">@author</span> zeewane</div><div class="line"> * <span class="doctag">@date</span> 2016年9月21日 下午3:42:05</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Group</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> Long id;</div><div class="line">	<span class="keyword">private</span> String name;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> List&lt;User&gt; users = <span class="keyword">new</span> ArrayList&lt;User&gt;();</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> Long <span class="title">getId</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> id;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setId</span><span class="params">(Long id)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.id = id;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> name;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.name = name;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> List&lt;User&gt; <span class="title">getUsers</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> users;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUsers</span><span class="params">(List&lt;User&gt; users)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.users = users;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="Test1-java"><a href="#Test1-java" class="headerlink" title="Test1.java"></a>Test1.java</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.hundsun.shiro.JsonTest;</div><div class="line"></div><div class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSON;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * fastjson的测试类，java对象和json格式之间的互转</div><div class="line"> * </div><div class="line"> * <span class="doctag">@author</span> zeewane</div><div class="line"> * <span class="doctag">@date</span> 2016年9月21日 下午3:47:20</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test1</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"></div><div class="line">		Group group = <span class="keyword">new</span> Group();</div><div class="line"></div><div class="line">		group.setId(<span class="number">0L</span>);</div><div class="line">		group.setName(<span class="string">"admin"</span>);</div><div class="line"></div><div class="line">		User guestUser = <span class="keyword">new</span> User();</div><div class="line">		guestUser.setId(<span class="number">2L</span>);</div><div class="line">		guestUser.setName(<span class="string">"guest"</span>);</div><div class="line"></div><div class="line">		User rootUser = <span class="keyword">new</span> User();</div><div class="line">		rootUser.setId(<span class="number">3L</span>);</div><div class="line">		rootUser.setName(<span class="string">"root"</span>);</div><div class="line"></div><div class="line">		group.getUsers().add(guestUser);</div><div class="line">		group.getUsers().add(rootUser);</div><div class="line"></div><div class="line">		<span class="comment">// 将java对象转换成json</span></div><div class="line">		String jsonString = JSON.toJSONString(group);</div><div class="line"></div><div class="line">		System.out.println(jsonString);</div><div class="line"></div><div class="line">		<span class="comment">// 将json重新转换为java对象</span></div><div class="line">		Group group2 = JSON.parseObject(jsonString, Group.class);</div><div class="line"></div><div class="line">		System.out.println(group2.getName());</div><div class="line">		<span class="keyword">for</span> (User user : group2.getUsers()) &#123;</div><div class="line">			System.out.println(user.getId() + <span class="string">":"</span> + user.getName());</div><div class="line">		&#125;</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// output</span></div><div class="line">&#123;<span class="string">"id"</span>:<span class="number">0</span>,<span class="string">"name"</span>:<span class="string">"admin"</span>,<span class="string">"users"</span>:[&#123;<span class="string">"id"</span>:<span class="number">2</span>,<span class="string">"name"</span>:<span class="string">"guest"</span>&#125;,&#123;<span class="string">"id"</span>:<span class="number">3</span>,<span class="string">"name"</span>:<span class="string">"root"</span>&#125;]&#125;</div><div class="line">admin</div><div class="line"><span class="number">2</span>:guest</div><div class="line"><span class="number">3</span>:root</div></pre></td></tr></table></figure>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[win10无法新建的解决办法]]></title>
+      <url>http://yoursite.com/2016/09/14/win10%E6%97%A0%E6%B3%95%E6%96%B0%E5%BB%BA%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</url>
+      <content type="html"><![CDATA[<p>因为显示有病毒，就一时冲动去下载了据说口碑比较好的360 total security，也就是传说中的360国际版。<br>然后装上以后就给我来了一通扫描，然后说优化，然后就删了我一堆注册表……直接导致少了git、svn、新建和intel显卡驱动的右键操作。<br>新建的找了好久都找不到办法，后来试了一个，成了。另外的三个预计是要重新安装程序了，刚好把git的版本降低一点。</p>
+<ol>
+<li>首先用管理员身份打开cmd。</li>
+<li>输入命令<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cmd /k reg add &quot;HKEY_CLASSES_ROOT\Directory\Background\shellex\ContextMenuHandlers\New&quot; /ve /t REG_SZ /d &#123;D969A300-E7FF-11d0-A93B-00A0C90F2719&#125; /f</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>直接运行即可。<br>新建功能修复，待会来测试git和svn是否正常。</p>
+<p>update at 2016.09.18  </p>
+<p>重新安装git和svn后，右键功能正常，集成显卡的驱动要到时候更新以后才会出现了，不过这个无妨，平时不大用。</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[sublime text3 注册码]]></title>
+      <url>http://yoursite.com/2016/09/09/sublime-text3-%E6%B3%A8%E5%86%8C%E7%A0%81/</url>
+      <content type="html"><![CDATA[<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">—– BEGIN LICENSE —–</div><div class="line">Michael Barnes</div><div class="line">Single User License</div><div class="line">EA7E-821385</div><div class="line">8A353C41 872A0D5C DF9B2950 AFF6F667</div><div class="line">C458EA6D 8EA3C286 98D1D650 131A97AB</div><div class="line">AA919AEC EF20E143 B361B1E7 4C8B7F04</div><div class="line">B085E65E 2F5F5360 8489D422 FB8FC1AA</div><div class="line">93F6323C FD7F7544 3F39C318 D95E6480</div><div class="line">FCCC7561 8A4A1741 68FA4223 ADCEDE07</div><div class="line">200C25BE DBBC4855 C4CFB774 C5EC138C</div><div class="line">0FEC1CEF D9DCECEC D3A5DAD1 01316C36</div><div class="line">—— END LICENSE ——</div></pre></td></tr></table></figure>
+<p>过了这么久依旧可以用……</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[一个超级酷的网页背景]]></title>
+      <url>http://yoursite.com/2016/09/02/%E4%B8%80%E4%B8%AA%E8%B6%85%E7%BA%A7%E9%85%B7%E7%9A%84%E7%BD%91%E9%A1%B5%E8%83%8C%E6%99%AF/</url>
+      <content type="html"><![CDATA[<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;script src=<span class="string">"http://open.sojson.com/common/js/canvas-nest.min.js"</span> </div><div class="line">        count=<span class="string">"200"</span> zindex=<span class="string">"-2"</span> opacity=<span class="string">"0.5"</span> color=<span class="string">"47,135,193"</span> type=<span class="string">"text/javascript"</span>&gt;</div><div class="line"><span class="xml"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></div></pre></td></tr></table></figure>
+<p>超级酷的一个效果，在sojson网站上看到的，站长分享了。<br>会根据鼠标的位置，然后折线不断的汇聚，最后变成很酷的一个圆。</p>
+<p><strong>注意事项</strong><br>要把这个放在body里面，放在header里会出事。</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[shiro源码分析博客]]></title>
+      <url>http://yoursite.com/2016/08/31/shiro%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E5%8D%9A%E5%AE%A2/</url>
+      <content type="html"><![CDATA[<p>发现一个超级棒的shiro源码分析博客，大神就是屌。  </p>
+<p><a href="http://lgbolgger.iteye.com/blog/2163890" target="_blank" rel="external">shiro源码分析（一）入门</a><br><a href="http://lgbolgger.iteye.com/blog/2165026" target="_blank" rel="external">shiro源码分析（二）Subject和Session</a><br><a href="http://lgbolgger.iteye.com/blog/2166909" target="_blank" rel="external">shiro源码分析（三）授权、认证、缓存的接口设计</a><br><a href="http://lgbolgger.iteye.com/blog/2168797" target="_blank" rel="external">shiro源码分析（四）具体的Realm</a><br><a href="http://lgbolgger.iteye.com/blog/2168520" target="_blank" rel="external">shiro源码分析（五）CredentialsMatcher</a><br><a href="http://lgbolgger.iteye.com/blog/2170522" target="_blank" rel="external">shiro源码分析（六）CredentialsMatcher的案例分析</a></p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[关于登陆加密的一些疑惑]]></title>
+      <url>http://yoursite.com/2016/08/30/%E5%85%B3%E4%BA%8E%E7%99%BB%E9%99%86%E5%8A%A0%E5%AF%86%E7%9A%84%E4%B8%80%E4%BA%9B%E7%96%91%E6%83%91/</url>
+      <content type="html"><![CDATA[<p>shiro里面预置了一些散列的加密算法，这些加密算法都是要逼近单向散列函数，简单的理解就是你可以通过输入的密码，然后放入哈希算法中去计算得到一串32位的字符串，然后持久化保存到数据库中，但是你没有办法把这个32位的字符串还原为密码，这个加密的过程是不可逆的。所以shiro这边在进行认证的时候，会在认证器Authenticator里写好加密的算法，用户认证的时候传入的token中有用户的密码，提取出来然后经过运算得到这串32位的字符串，去和数据库中的进行比较，如果一致就认证通过。这个操作避免了明文储存密码的隐患，数据库被入侵也不会导致用户的密码泄露。  </p>
+<p>因为一些简单密码的存在，所以通过md5的密文来反向推导出那些简单的密码也是可行的，这类网站也大量的存在。所以就有了盐这个概念，用户的密码加上盐然后再进行散列计算，这串密文被反向破解的几率就大大减小，每个用户都有自己的随机生成的盐，被保存在数据库中。这个操作是避免了数据库中简单密码被破解的隐患。  </p>
+<p>但是如果请求在中途被拦截，这时候用户的密码万一是明文传输，就被直接被拦住然后解析出来了，下次就直接拿着这个用户名和密码去登陆就行。所以要在客户端就进行加密，盐可以在前端就随机生成然后保存在session中，和密文一并传给server。服务器从session中获取盐，进行运算和比较，相同就通过认证。这个操作避免了请求被拦截后密码直接被取出的问题。（这个是我自己瞎想的，感觉逻辑有问题，这个session中的盐有什么用，数据库中要存的是密文，传过来的盐不是一点价值都没有，又不可能数据库里取出来然后解密再加密。所以应该是客户端传过来的的确应该是密文，但是收到以后要进行解密，变成用户输入的密码原文后再进行从数据库中读取盐，进行加密运算，然后再和数据库中保存的密文比较，相同就通过），所以客户端的盐是功能是，防止简单密码被拦截然后破解。  </p>
+<p>但是，如果是在用户点击登录按钮的瞬间，获取了password输入框里面的value值呢？他们不需要知道加密算法和盐是什么东西，他们只需要拿到用户的账号和密码就可以在下次直接登陆，那这个东西不是没办法去防范了，除非借助手机验证码这种可以证明身份的形式，或者是大数据进行分析，得出常用登陆电脑和登陆地点进行判断，不是常用的设备和地点就发验证码，是就可以登陆，不然没办法阻止他们获取用户名和密码啊。</p>
+<p>是不是要换种思路，我理解的只有散列算法，太狭隘了？还是说道高一尺魔高一丈，是不可能完全阻止密码被获取的，动态的验证码也只能避免他们去成功登陆，并不能阻止他们获取正确的密码。</p>
+<h2 id="证书"><a href="#证书" class="headerlink" title="证书"></a>证书</h2><p>update at 2016/09/27 14:10</p>
+<p>需要一个签名（证书），而且一定要有时效性，时间戳是不可见的，随机数让他看到就看到，证书包括的是时间戳、密文、状态位。  </p>
+<p>首先传过来的肯定是要一个密文的形式，不能明文传输，需要加密后进行传输。  </p>
+<p>在用户请求登陆页面的时候，服务器同步生成一个签名，保存在服务器，并随着登陆页面返回过去，放在隐藏输入框中，签名的作用是判断用户请求的表单是不是服务器响应返回的那个，辨别被挟持伪造的请求，具有时效性。里面存着：时间戳（用户请求登陆的时间），状态位（判断是否被劫持伪造过），随机生成的密文，作为判断。</p>
+<p>用户接收到登陆页面开始登陆，输入用户名、密码，点击登陆按钮开始登陆，此时对明文密码进行加密然后进行传输。此时签名也作为隐藏的输入域被提交，    状态位此时被修改，（状态位不应该这么使用，这样被拦截了也没什么用啊），同时提交的还有当前的时间戳。</p>
+<p>服务端接收到用户登录的信息后，首先要去进行签名的对照，两个时间之间的间隔是否超时，若超时则判断此登陆无效；此外判断签名中的密文是否一致，状态位是否正确，如果通过，就进入密码核对环节。</p>
+<p>数据库进行散列存储是为了避免内部运维看到明文密码，或者数据库泄露被拖库后导致用户信息流出。这一步在注册的时候即完成，随机生成一个盐，保存在用户的身份信息表中，不可逆的散列算法计算多次后保存密码。</p>
+<p>再加上判断是不是常用地点、常用设备登陆，不是就加上一个手机短信验证码的程序，来判断是不是本人在使用。</p>
+<p>不可能做到绝对的安全。</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[shiro授权代码流程]]></title>
+      <url>http://yoursite.com/2016/08/26/shiro%E6%8E%88%E6%9D%83%E4%BB%A3%E7%A0%81%E6%B5%81%E7%A8%8B/</url>
+      <content type="html"><![CDATA[<h2 id="授权流程"><a href="#授权流程" class="headerlink" title="授权流程"></a>授权流程</h2><ol>
+<li>shiro拦截到需要权限的url的时候，就传入需要的permission，进行subject.isPermitted(permission)的检查。</li>
+<li>DelegatingSubject代理类接收到permission后，调用自己的isPermitted方法进行判断。判断分为两步：hasPrincipals &amp;&amp; securityManager.isPermitted(getPrincipals(),permission)。首先是判断用户的身份信息是否存在切有效，第二步是判断用户的凭证信息和用户所要请求的权限是否符合。</li>
+<li>AuthorizingSecurityManager调用this.authorizer.isPermitted(principals,permission)进行判断，返回一个布尔值。authorizer在AuthorizingSecurityManager的构造函数中就被new，就是ModularRealmAuthorizer。</li>
+<li>ModularRealmAuthorizer接收到参数后，遍历realm，进行权限判断。((Authorizer) realm).isPermitted(principals, permission)。</li>
+<li>上面的isPermitted方法是定义在AuthorizingRealm中的，自定义的realm都要继承这个类，也就是说自定义的realm都有这个判断的方法。realm内部首先会拿着principals去获取到用户的权限信息AuthorizationInfo，然后对权限信息进行遍历查找，看看permission是否存在于info中，如果存在就返回true。</li>
+</ol>
+<h2 id="AuthorizationTest"><a href="#AuthorizationTest" class="headerlink" title="AuthorizationTest"></a>AuthorizationTest</h2><p>传入权限标识符，返回一个布尔值，表示是否有这个权限。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// isPermitted里面传入的是权限标识符</span></div><div class="line">subject.isPermitted(<span class="string">"user:create:1"</span>);</div></pre></td></tr></table></figure>
+<h2 id="DelegatingSubject"><a href="#DelegatingSubject" class="headerlink" title="DelegatingSubject"></a>DelegatingSubject</h2><p>权限标识符传入后，进行两个判断，一个是当前是否存在这个身份信息，另外一个是这个用户是否有这个权限，两个都是true才返回true，权限认证通过</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// String类型的权限标识符</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isPermitted</span><span class="params">(String permission)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> hasPrincipals() &amp;&amp; securityManager.isPermitted(getPrincipals(), permission);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 权限</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isPermitted</span><span class="params">(Permission permission)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> hasPrincipals() &amp;&amp; securityManager.isPermitted(getPrincipals(), permission);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 是否有用户凭证信息，也就是用户是否存在的意思</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">hasPrincipals</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> !CollectionUtils.isEmpty(getPrincipals());</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 返回主身份信息吗？只返回了集合中的第一个</span></div><div class="line"><span class="function"><span class="keyword">public</span> PrincipalCollection <span class="title">getPrincipals</span><span class="params">()</span> </span>&#123;</div><div class="line">    List&lt;PrincipalCollection&gt; runAsPrincipals = getRunAsPrincipalsStack();</div><div class="line">    <span class="keyword">return</span> CollectionUtils.isEmpty(runAsPrincipals) ? <span class="keyword">this</span>.principals : runAsPrincipals.get(<span class="number">0</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 从session中获取用户的身份凭证信息</span></div><div class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</div><div class="line"><span class="function"><span class="keyword">private</span> List&lt;PrincipalCollection&gt; <span class="title">getRunAsPrincipalsStack</span><span class="params">()</span> </span>&#123;</div><div class="line">    Session session = getSession(<span class="keyword">false</span>);</div><div class="line">    <span class="keyword">if</span> (session != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">return</span> (List&lt;PrincipalCollection&gt;) session.getAttribute(RUN_AS_PRINCIPALS_SESSION_KEY);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="AuthorizingSecurityManager"><a href="#AuthorizingSecurityManager" class="headerlink" title="AuthorizingSecurityManager"></a>AuthorizingSecurityManager</h2><p>调用ModularRealmAuthorizer中的权限判断方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> Authorizer authorizer;</div><div class="line"></div><div class="line"><span class="comment">// 构造函数中就new了一个ModularRealmAuthorizer</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">AuthorizingSecurityManager</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>();</div><div class="line">    <span class="keyword">this</span>.authorizer = <span class="keyword">new</span> ModularRealmAuthorizer();</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isPermitted</span><span class="params">(PrincipalCollection principals, String permissionString)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.authorizer.isPermitted(principals, permissionString);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isPermitted</span><span class="params">(PrincipalCollection principals, Permission permission)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.authorizer.isPermitted(principals, permission);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="ModularRealmAuthorizer"><a href="#ModularRealmAuthorizer" class="headerlink" title="ModularRealmAuthorizer"></a>ModularRealmAuthorizer</h2><p>遍历realm集合，只要有一个realm判断认证通过，就返回true，这边的realm可以是自己设置进去的。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isPermitted</span><span class="params">(PrincipalCollection principals, String permission)</span> </span>&#123;</div><div class="line">    assertRealmsConfigured();</div><div class="line">    <span class="keyword">for</span> (Realm realm : getRealms()) &#123;</div><div class="line">        <span class="keyword">if</span> (!(realm <span class="keyword">instanceof</span> Authorizer)) <span class="keyword">continue</span>;</div><div class="line">        <span class="keyword">if</span> (((Authorizer) realm).isPermitted(principals, permission)) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isPermitted</span><span class="params">(PrincipalCollection principals, Permission permission)</span> </span>&#123;</div><div class="line">    assertRealmsConfigured();</div><div class="line">    <span class="keyword">for</span> (Realm realm : getRealms()) &#123;</div><div class="line">        <span class="keyword">if</span> (!(realm <span class="keyword">instanceof</span> Authorizer)) <span class="keyword">continue</span>;</div><div class="line">        <span class="comment">// 调用realm来进行授权的查询，只要一个满足就返回true</span></div><div class="line">        <span class="keyword">if</span> (((Authorizer) realm).isPermitted(principals, permission)) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="AuthorizingRealm"><a href="#AuthorizingRealm" class="headerlink" title="AuthorizingRealm"></a>AuthorizingRealm</h2><p>这是realm内部进行权限查询的流程，要求的自定义的realm全部都要继承它。会把用户的身份信息传入进去，然后获取到用户的授权信息，AuthorizerInfo，然后遍历info中的权限信息，只要存在，就返回true。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isPermitted</span><span class="params">(PrincipalCollection principals, String permission)</span> </span>&#123;</div><div class="line">    Permission p = getPermissionResolver().resolvePermission(permission);</div><div class="line">    <span class="keyword">return</span> isPermitted(principals, p);</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isPermitted</span><span class="params">(PrincipalCollection principals, Permission permission)</span> </span>&#123;</div><div class="line">    <span class="comment">// 这就是在自定义的realm里override的方法</span></div><div class="line">    AuthorizationInfo info = getAuthorizationInfo(principals);</div><div class="line">    <span class="comment">// 会从info中获取信息</span></div><div class="line">    <span class="keyword">return</span> isPermitted(permission, info);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">isPermitted</span><span class="params">(Permission permission, AuthorizationInfo info)</span> </span>&#123;</div><div class="line">    <span class="comment">// 取出所有的权限信息然后遍历寻找</span></div><div class="line">    Collection&lt;Permission&gt; perms = getPermissions(info);</div><div class="line">    <span class="keyword">if</span> (perms != <span class="keyword">null</span> &amp;&amp; !perms.isEmpty()) &#123;</div><div class="line">        <span class="keyword">for</span> (Permission perm : perms) &#123;</div><div class="line">            <span class="keyword">if</span> (perm.implies(permission)) &#123;</div><div class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[shiro认证代码流程]]></title>
+      <url>http://yoursite.com/2016/08/25/shiro%E8%AE%A4%E8%AF%81%E4%BB%A3%E7%A0%81%E6%B5%81%E7%A8%8B/</url>
+      <content type="html"><![CDATA[<h2 id="认证流程"><a href="#认证流程" class="headerlink" title="认证流程"></a>认证流程</h2><ol>
+<li>subject提交认证，传过去token参数</li>
+<li>DelegatingSubject代理类调用securityManager.login(this,token)，此方法会通过token查询，获取到一个subject，接下来会对这个subject进行检查，如果没有问题，就把subject的内容塞入到this中，也就是当前调用认证方法的那个subject中，完成副作用。</li>
+<li>DefaultSecurityManager的login方法拿到subject和token参数后，调用父类的方法：authenticate(token)来获取到一个认证信息AuthenticationInfo。接下来会调用createSubject方法，把AuthenticationInfo、token和subject重新组装成一个新的subject，返回。</li>
+<li>AuthenticatingSecurityManager方法中的authenticate(token)方法接收到token后，执行操作，return this.authenticator.authenticate(token)。authenticator在new的时候就自动创建完成，为ModularAuthenticator，返回一个认证信息AuthenticationInfo。</li>
+<li>AbstractAuthenticator方法中会有一个方法info = doAuthenticate(token)，来获取认证信息，ModularAuthenticator方法中写了这个。</li>
+<li>ModularAuthenticator方法继承了抽象类AbstractAuthenticator，拿到token后去realm里查询用户的认证信息，自定义的realm就在这里的集合中，通过注入的方式加入集合，也可以配置认证的三个策略。自定义的realm覆盖重写doGetAuthenticationInfo方法。</li>
+</ol>
+<h2 id="subject-login-token"><a href="#subject-login-token" class="headerlink" title="subject.login(token)"></a>subject.login(token)</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 执行认证的提交</span></div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">    subject.login(token);</div><div class="line">&#125; <span class="keyword">catch</span> (AuthenticationException e) &#123;</div><div class="line">    <span class="comment">// TODO Auto-generated catch block</span></div><div class="line">    e.printStackTrace();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="DelegatingSubject"><a href="#DelegatingSubject" class="headerlink" title="DelegatingSubject"></a>DelegatingSubject</h2><p>subject的代理类。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DelegatingSubject</span> <span class="keyword">implements</span> <span class="title">Subject</span> </span>&#123;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">login</span><span class="params">(AuthenticationToken token)</span> <span class="keyword">throws</span> AuthenticationException </span>&#123;</div><div class="line">    clearRunAsIdentitiesInternal();</div><div class="line">    <span class="comment">// subject是返回的已经认证处理过的，根据token去查询出来的subject对象</span></div><div class="line">    Subject subject = securityManager.login(<span class="keyword">this</span>, token);</div><div class="line"></div><div class="line">    <span class="comment">// 用户的身份凭证信息</span></div><div class="line">    PrincipalCollection principals;</div><div class="line"></div><div class="line">    String host = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">    <span class="comment">// 把subject中获取到的凭证信息放进去</span></div><div class="line">    <span class="keyword">if</span> (subject <span class="keyword">instanceof</span> DelegatingSubject) &#123;</div><div class="line">        DelegatingSubject delegating = (DelegatingSubject) subject;</div><div class="line">        <span class="comment">//we have to do this in case there are assumed identities - we don't want to lose the 'real' principals:</span></div><div class="line">        principals = delegating.principals;</div><div class="line">        host = delegating.host;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        principals = subject.getPrincipals();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 如果凭证信息为空，就是没有有效的用户认证信息返回，就抛出异常</span></div><div class="line">    <span class="keyword">if</span> (principals == <span class="keyword">null</span> || principals.isEmpty()) &#123;</div><div class="line">        String msg = <span class="string">"Principals returned from securityManager.login( token ) returned a null or "</span> +</div><div class="line">                <span class="string">"empty value.  This value must be non null and populated with one or more elements."</span>;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(msg);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">// 有合法的凭证信息，就全部塞到调用login的那个subject中，完成副作用</span></div><div class="line">    <span class="keyword">this</span>.principals = principals;</div><div class="line">    <span class="keyword">this</span>.authenticated = <span class="keyword">true</span>;</div><div class="line">    <span class="keyword">if</span> (token <span class="keyword">instanceof</span> HostAuthenticationToken) &#123;</div><div class="line">        host = ((HostAuthenticationToken) token).getHost();</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (host != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">this</span>.host = host;</div><div class="line">    &#125;</div><div class="line">    Session session = subject.getSession(<span class="keyword">false</span>);</div><div class="line">    <span class="keyword">if</span> (session != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">this</span>.session = decorate(session);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">this</span>.session = <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="DefaultSecurityManager"><a href="#DefaultSecurityManager" class="headerlink" title="DefaultSecurityManager"></a>DefaultSecurityManager</h2><p>这是一个默认的安全管理器。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> Subject <span class="title">login</span><span class="params">(Subject subject, AuthenticationToken token)</span> <span class="keyword">throws</span> AuthenticationException </span>&#123;</div><div class="line">    AuthenticationInfo info;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="comment">// 根据token去进行认证，返回一个认证信息，authenticationInfo</span></div><div class="line">        info = authenticate(token);</div><div class="line">    &#125; <span class="keyword">catch</span> (AuthenticationException ae) &#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="comment">// 认证失败就抛出认证失败的异常</span></div><div class="line">            onFailedLogin(token, ae, subject);</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            <span class="keyword">if</span> (log.isInfoEnabled()) &#123;</div><div class="line">                log.info(<span class="string">"onFailedLogin method threw an "</span> +</div><div class="line">                        <span class="string">"exception.  Logging and propagating original AuthenticationException."</span>, e);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">throw</span> ae; <span class="comment">//propagate</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 如果到这步，说明认证成功，把认证信息、令牌等全部组装成一个新的subject，返回这个已经通过认证的，已登录的subject</span></div><div class="line">    Subject loggedIn = createSubject(token, info, subject);</div><div class="line"></div><div class="line">    onSuccessfulLogin(token, info, loggedIn);</div><div class="line"></div><div class="line">    <span class="keyword">return</span> loggedIn;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="AuthenticatingSecurityManager"><a href="#AuthenticatingSecurityManager" class="headerlink" title="AuthenticatingSecurityManager"></a>AuthenticatingSecurityManager</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> AuthenticationInfo <span class="title">authenticate</span><span class="params">(AuthenticationToken token)</span> <span class="keyword">throws</span> AuthenticationException </span>&#123;</div><div class="line">    <span class="comment">// 值得一提的是这个authenticator是默认的new的一个ModularRealmAuthenticator</span></div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.authenticator.authenticate(token);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="AbstractAuthenticator"><a href="#AbstractAuthenticator" class="headerlink" title="AbstractAuthenticator"></a>AbstractAuthenticator</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> AuthenticationInfo <span class="title">authenticate</span><span class="params">(AuthenticationToken token)</span> <span class="keyword">throws</span> AuthenticationException </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (token == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Method argumet (authentication token) cannot be null."</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    log.trace(<span class="string">"Authentication attempt received for token [&#123;&#125;]"</span>, token);</div><div class="line"></div><div class="line">    AuthenticationInfo info;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="comment">// 进行认证，认证信息放到info中，否则抛异常</span></div><div class="line">        info = doAuthenticate(token);</div><div class="line">        <span class="keyword">if</span> (info == <span class="keyword">null</span>) &#123;</div><div class="line">            String msg = <span class="string">"No account information found for authentication token ["</span> + token + <span class="string">"] by this "</span> +</div><div class="line">                    <span class="string">"Authenticator instance.  Please check that it is configured correctly."</span>;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> AuthenticationException(msg);</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">catch</span> (Throwable t) &#123;</div><div class="line">        AuthenticationException ae = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">if</span> (t <span class="keyword">instanceof</span> AuthenticationException) &#123;</div><div class="line">            ae = (AuthenticationException) t;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (ae == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="comment">//Exception thrown was not an expected AuthenticationException.  Therefore it is probably a little more</span></div><div class="line">            <span class="comment">//severe or unexpected.  So, wrap in an AuthenticationException, log to warn, and propagate:</span></div><div class="line">            String msg = <span class="string">"Authentication failed for token submission ["</span> + token + <span class="string">"].  Possible unexpected "</span> +</div><div class="line">                    <span class="string">"error? (Typical or expected login exceptions should extend from AuthenticationException)."</span>;</div><div class="line">            ae = <span class="keyword">new</span> AuthenticationException(msg, t);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            notifyFailure(token, ae);</div><div class="line">        &#125; <span class="keyword">catch</span> (Throwable t2) &#123;</div><div class="line">            <span class="keyword">if</span> (log.isWarnEnabled()) &#123;</div><div class="line">                String msg = <span class="string">"Unable to send notification for failed authentication attempt - listener error?.  "</span> +</div><div class="line">                        <span class="string">"Please check your AuthenticationListener implementation(s).  Logging sending exception "</span> +</div><div class="line">                        <span class="string">"and propagating original AuthenticationException instead..."</span>;</div><div class="line">                log.warn(msg, t2);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line"></div><div class="line">        <span class="keyword">throw</span> ae;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    log.debug(<span class="string">"Authentication successful for token [&#123;&#125;].  Returned account [&#123;&#125;]"</span>, token, info);</div><div class="line"></div><div class="line">    notifySuccess(token, info);</div><div class="line"></div><div class="line">    <span class="keyword">return</span> info;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="ModularRealmAuthenticator"><a href="#ModularRealmAuthenticator" class="headerlink" title="ModularRealmAuthenticator"></a>ModularRealmAuthenticator</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> AuthenticationInfo <span class="title">doAuthenticate</span><span class="params">(AuthenticationToken authenticationToken)</span> <span class="keyword">throws</span> AuthenticationException </span>&#123;</div><div class="line">    assertRealmsConfigured();</div><div class="line">    Collection&lt;Realm&gt; realms = getRealms();</div><div class="line">    <span class="comment">// 判断多个realm还是单个realm</span></div><div class="line">    <span class="keyword">if</span> (realms.size() == <span class="number">1</span>) &#123;</div><div class="line">        <span class="keyword">return</span> doSingleRealmAuthentication(realms.iterator().next(), authenticationToken);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">return</span> doMultiRealmAuthentication(realms, authenticationToken);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 单个realm进行认证 </span></div><div class="line"><span class="function"><span class="keyword">protected</span> AuthenticationInfo <span class="title">doSingleRealmAuthentication</span><span class="params">(Realm realm, AuthenticationToken token)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (!realm.supports(token)) &#123;</div><div class="line">        String msg = <span class="string">"Realm ["</span> + realm + <span class="string">"] does not support authentication token ["</span> +</div><div class="line">                token + <span class="string">"].  Please ensure that the appropriate Realm implementation is "</span> +</div><div class="line">                <span class="string">"configured correctly or that the realm accepts AuthenticationTokens of this type."</span>;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> UnsupportedTokenException(msg);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 这个get方法就是我们自定义realm的时候override的方法</span></div><div class="line">    AuthenticationInfo info = realm.getAuthenticationInfo(token);</div><div class="line">    <span class="keyword">if</span> (info == <span class="keyword">null</span>) &#123;</div><div class="line">        String msg = <span class="string">"Realm ["</span> + realm + <span class="string">"] was unable to find account data for the "</span> +</div><div class="line">                <span class="string">"submitted AuthenticationToken ["</span> + token + <span class="string">"]."</span>;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> UnknownAccountException(msg);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> info;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>注意的是，ModularRealmAuthenticator中的realm，是有set方法的，在spring中直接通过配置文件注入的方式set进来即可。  </p>
+<h2 id="多个realm的配置方法"><a href="#多个realm的配置方法" class="headerlink" title="多个realm的配置方法"></a>多个realm的配置方法</h2><p>其中也有三种不同的realm认证策略，基本上都是针对多个realm配置的情况。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 配置认证策略</span></div><div class="line">DefaultSecurityManager securityManager = <span class="keyword">new</span> DefaultSecurityManager();</div><div class="line"></div><div class="line">ModularRealmAuthenticator authenticator = <span class="keyword">new</span> ModularRealmAuthenticator();</div><div class="line">authenticator.setAuthenticationStrategy(<span class="keyword">new</span> AllSuccessfulStrategy());</div><div class="line">securityManager.setAuthenticator(authenticator);</div></pre></td></tr></table></figure>
+<h3 id="ini配置方法"><a href="#ini配置方法" class="headerlink" title="ini配置方法"></a>ini配置方法</h3><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">[main]</div><div class="line">#authenticator</div><div class="line">authenticator=org.apache.shiro.authc.pam.ModularRealmAuthenticator</div><div class="line">authenticationStrategy=org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy</div><div class="line">authenticator.authenticationStrategy=$authenticationStrategy</div><div class="line">securityManager.authenticator=$authenticator</div></pre></td></tr></table></figure>
+<h3 id="spring注入的方法"><a href="#spring注入的方法" class="headerlink" title="spring注入的方法"></a>spring注入的方法</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- 配置认证策略 --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"authenticator.authenticationStrategy"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">"org.apache.shiro.authc.pam.FirstSuccessfulStrategy"</span> /&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></div></pre></td></tr></table></figure>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[hexo的4000端口被占用的解决办法]]></title>
+      <url>http://yoursite.com/2016/08/22/hexo%E7%9A%844000%E7%AB%AF%E5%8F%A3%E8%A2%AB%E5%8D%A0%E7%94%A8%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</url>
+      <content type="html"><![CDATA[<p>前几天发现无法访问hexo原来的本地地址，localhost:4000一直在转啊转，进不去，猜测是端口被占用。<br>修改端口的方法是，<code>node_modules\hexo-server</code>里的index.js文件，<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* global hexo */</span></div><div class="line"><span class="meta"></span></div><div class="line">'use strict';</div><div class="line"></div><div class="line"><span class="keyword">var</span> assign = <span class="built_in">require</span>(<span class="string">'object-assign'</span>);</div><div class="line"></div><div class="line">hexo.config.server = assign(&#123;</div><div class="line">  port: <span class="number">4001</span>,</div><div class="line">  log: <span class="literal">false</span>,</div><div class="line">  ip: <span class="string">'0.0.0.0'</span>,</div><div class="line">  compress: <span class="literal">false</span>,</div><div class="line">  header: <span class="literal">true</span></div><div class="line">&#125;, hexo.config.server);</div></pre></td></tr></table></figure></p>
+<p>修改port即可。</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Project facet Java version 1.8 is not support ]]></title>
+      <url>http://yoursite.com/2016/08/12/Project-facet-Java-version-1-8-is-not-support/</url>
+      <content type="html"><![CDATA[<p>在移植eclipse项目时，如果遇到</p>
+<p>“Project facet Java version 1.7 is not supported.”</p>
+<p>项目中的jdk1.7不支持。说明项目是其他版本jdk编译的，在eclipse里运行时会报版本不支持。<br>解决办法:</p>
+<ol>
+<li><p>选中项目 Properties , 选择 Project Facets,右击选择 Java , Change Version 即可</p>
+</li>
+<li><p>在项目的目录下有一个.settings的文件夹，该文件夹下有一个org.eclipse.wst.common.project.facet.core.xml文件，内容如下</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">faceted-project</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">fixed</span> <span class="attr">facet</span>=<span class="string">"jst.java"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">fixed</span> <span class="attr">facet</span>=<span class="string">"jst.web"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">installed</span> <span class="attr">facet</span>=<span class="string">"jst.web"</span> <span class="attr">version</span>=<span class="string">"2.4"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">installed</span> <span class="attr">facet</span>=<span class="string">"jst.java"</span> <span class="attr">version</span>=<span class="string">"6.0"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">faceted-project</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>修改 <code>&lt;installed facet=&quot;jst.java&quot; version=&quot;6.0&quot;/&gt;</code> 为 <code>&lt;installed facet=&quot;jst.java&quot; version=&quot;5.0&quot;/&gt;</code> 即可。</p>
+<p>直接用第一种方法改简单。</p>
+<p><a href="http://my.oschina.net/nly/blog/349081" target="_blank" rel="external">转载原文</a></p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[shiro系列2-权限管理解决方案]]></title>
+      <url>http://yoursite.com/2016/08/10/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</url>
+      <content type="html"><![CDATA[<h2 id="什么是粗粒度和细粒度权限"><a href="#什么是粗粒度和细粒度权限" class="headerlink" title="什么是粗粒度和细粒度权限"></a>什么是粗粒度和细粒度权限</h2><ul>
+<li><p>粗颗粒度权限管理，是对<strong>资源类型</strong>的权限管理。<br>资源类型比如：菜单、url链接、用户添加页面、页面信息、类方法、页面中按钮…<br>粗粒度权限管理比如：超级管理员可以访问户添加页面、用户信息等全部页面。<br>部门管理员可以访问用户信息页面包括 页面中所有按钮。</p>
+</li>
+<li><p>细颗粒度权限管理，是对<strong>资源实例</strong>的权限管理。<br>比如，员工号为001的修改链接，研发中心的用户信息，研发中心的员工…<br>说的简单点，细粒度的权限管理，就是<strong>数据级别</strong>的权限管理。<br>细粒度权限管理比如：部门经理只可以访问本部门的员工信息，用户只可以看到自己的菜单，大区经理只能查看本辖区的销售订单。</p>
+</li>
+</ul>
+<h2 id="如何实现粗粒度和细粒度权限"><a href="#如何实现粗粒度和细粒度权限" class="headerlink" title="如何实现粗粒度和细粒度权限"></a>如何实现粗粒度和细粒度权限</h2><h3 id="粗颗粒度权限管理"><a href="#粗颗粒度权限管理" class="headerlink" title="粗颗粒度权限管理"></a>粗颗粒度权限管理</h3><p>粗粒度权限管理比较容易将权限管理的代码抽取出来在系统架构级别统一处理。比如：通过springmvc的拦截器实现授权。</p>
+<h3 id="细颗粒度权限管理"><a href="#细颗粒度权限管理" class="headerlink" title="细颗粒度权限管理"></a>细颗粒度权限管理</h3><p>对细粒度权限管理在数据级别是没有共性可言，针对细粒度权限管理就是系统业务逻辑的一部分，如果在业务层去处理相对比较简单，就在service层处理的时候，传个部门id进去进行判断。如果将细粒度权限管理统一在系统架构级别去抽取，比较困难，即使抽取的功能可能也存在扩展不强。<br><strong>建议细粒度的权限控制放在业务层去实现。</strong><br>比如：部门经理只查询本部门员工信息，在service接口提供一个部门id的参数，controller中根据当前用户的信息得到该用户属于哪个部门，调用service时将部门id传入service，实现该用户只查询本部门的员工。</p>
+<h3 id="粗粒度和细粒度例子"><a href="#粗粒度和细粒度例子" class="headerlink" title="粗粒度和细粒度例子"></a>粗粒度和细粒度例子</h3><p>系统有一个用户列表查询页面，对用户列表查询分权限，如果粗颗粒管理，张三和李四都有用户列表查询的权限，张三和李四都可以访问用户列表查询。<br>进一步进行细颗粒管理，张三（行政部）和李四(开发部)只可以查询自己本部门的用户信息。张三只能查看行政部 的用户信息，李四只能查看开发部门的用户信息。<br><strong>细粒度权限管理就是数据级别的权限管理。</strong></p>
+<h2 id="基于url拦截的方式实现"><a href="#基于url拦截的方式实现" class="headerlink" title="基于url拦截的方式实现"></a>基于url拦截的方式实现</h2><p>基于url拦截的方式实现在实际开发中比较常用的一种方式。<br>对于web系统，通过filter过虑器实现url拦截，也可以springmvc的拦截器实现基于url的拦截。</p>
+<h2 id="使用权限框架实现"><a href="#使用权限框架实现" class="headerlink" title="使用权限框架实现"></a>使用权限框架实现</h2><p>对于粗粒度权限管理，建议使用优秀权限管理框架来实现，节省开发成功，提高开发效率。<br>shiro就是一个优秀权限管理框架。</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[shiro系列1-权限管理原理知识]]></title>
+      <url>http://yoursite.com/2016/08/10/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86%E5%8E%9F%E7%90%86%E7%9F%A5%E8%AF%86/</url>
+      <content type="html"><![CDATA[<h2 id="什么是权限管理"><a href="#什么是权限管理" class="headerlink" title="什么是权限管理"></a>什么是权限管理</h2><p>只要有用户参与的系统一般都要有权限管理，权限管理实现对用户访问系统的<strong>控制</strong>，按照安全规则或者安全策略控制用户可以访问而且只能访问自己被授权的<strong>资源</strong>。 </p>
+<p>权限管理包括用户认证和授权两部分。</p>
+<h2 id="用户认证"><a href="#用户认证" class="headerlink" title="用户认证"></a>用户认证</h2><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>用户认证，用户去访问系统，系统要验证用户身份的合法性。最常用的<strong>用户身份验证</strong>的方法：1、用户名密码方式、2、指纹打卡机、3、基于证书验证方法等等。系统验证用户身份合法，用户方可访问系统的<strong>资源</strong>。</p>
+<h3 id="关键对象"><a href="#关键对象" class="headerlink" title="关键对象"></a>关键对象</h3><ul>
+<li>subject<br>主体，理解为用户,可能是程序，都要去访问系统的资源，系统需要对subject进行身份认证。</li>
+<li>principal<br>身份信息，通常是唯一的，一个主体还有多个身份信息，但是都有一个主身份信息（primary principal）。</li>
+<li>credential<br>凭证信息，可以是密码 、证书、指纹。</li>
+</ul>
+<p><strong>主体在进行身份认证的时候需要提供身份认证信息和凭证信息。</strong></p>
+<h2 id="用户授权"><a href="#用户授权" class="headerlink" title="用户授权"></a>用户授权</h2><h3 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h3><p>用户授权，简单理解为<strong>访问控制</strong>，在用户认证通过后，系统对用户访问资源进行控制，用户具有资源的访问权限方可访问。   </p>
+<p>通俗一点，就是你能不能够登陆是一回事，你登陆了能不能访问这些资源是另外一回事。前者叫访问控制，后者叫用户授权。<br>注册了以后你拥有了访问系统和系统资源的权限，之后系统还会继续进行资源访问的权限分配，这个决定你能访问具体哪些系统的资源。</p>
+<h3 id="关键对象-1"><a href="#关键对象-1" class="headerlink" title="关键对象"></a>关键对象</h3><p>授权的过程可以理解为：who要对what（which）进行how操作  </p>
+<ul>
+<li>who：主体即<strong>subject</strong><br>subject在认证通过后进行访问控制。</li>
+<li>what（which）：资源（<strong>resource</strong>）<br>subject必须具备资源的访问权限，方可访问该资源。资源比如，系统用户的列表页面、商品的修改菜单、商品id为001的商品信息，资源都是名词。</li>
+<li>how：权限/许可（<strong>permission</strong>）<br>针对资源的权限或许可，subject必须具有permission才可以访问资源，如何访问/操作需要定义permission，比如用户的添加、用户的修改、商品的删除，都是动词。</li>
+</ul>
+<p>资源分为资源类型和资源实例，关系类似于类和对象。</p>
+<ul>
+<li>资源类型<ul>
+<li>系统的用户信息</li>
+</ul>
+</li>
+<li>资源实例<ul>
+<li>系统中id为001的用户</li>
+</ul>
+</li>
+</ul>
+<h3 id="权限模型"><a href="#权限模型" class="headerlink" title="权限模型"></a>权限模型</h3><ul>
+<li>主体（账号、密码）</li>
+<li>资源（资源名称、访问地址）</li>
+<li>权限（权限名称、资源id）</li>
+<li>角色（角色名称）</li>
+<li>角色和权限关系（角色id、权限id）</li>
+<li>主体和角色关系（主体id、角色id）</li>
+</ul>
+<p>把下面的两张表合并，合并为权限表。<br>权限（权限名称、资源名称、资源访问地址）</p>
+<h3 id="分配权限"><a href="#分配权限" class="headerlink" title="分配权限"></a>分配权限</h3><ul>
+<li>用户需要分配相应的权限才可访问相应的资源。权限是对于资源的操作许可。</li>
+<li>通常给用户分配资源权限需要将权限信息持久化，比如存储在关系数据库中。</li>
+<li>把用户信息、权限管理、用户分配的权限信息写到数据库（权限数据模型）</li>
+</ul>
+<h3 id="权限控制（授权核心）"><a href="#权限控制（授权核心）" class="headerlink" title="权限控制（授权核心）"></a>权限控制（授权核心）</h3><h4 id="基于角色的访问控制"><a href="#基于角色的访问控制" class="headerlink" title="基于角色的访问控制"></a>基于角色的访问控制</h4><p>RBAC（Role Bssed Access Control），基于角色的访问控制。<br>比如 系统角色包括 ：部门经理、总经理等等（角色针对用户来划分）</p>
+<p>系统代码中实现：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">//如果该user是部门经理则可以访问if中的代码</div><div class="line">if(user.hasRole(&apos;部门经理&apos;))&#123;</div><div class="line">	//系统资源内容</div><div class="line">	//用户报表查看</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>问题</strong><br>角色针对人划分的，人作为用户在系统中属于活动内容，如果该 角色可以访问的资源出现变更，需要修改你的代码了，比如：需要变更为部门经理和总经理都可以进行用户报表查看，代码改为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">if(user.hasRole(&apos;部门经理&apos;) || user.hasRole(&apos;总经理&apos;))&#123;</div><div class="line">	//系统资源内容</div><div class="line">	//用户报表查看</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>基于角色的访问控制，不利于系统维护，可扩展性不强。</p>
+<h4 id="基于资源的访问控制"><a href="#基于资源的访问控制" class="headerlink" title="基于资源的访问控制"></a>基于资源的访问控制</h4><p>RBAC（Resource Based Access Control），基于资源的访问控制。<br>资源在系统中是不变的。对资源的访问需要具有permission权限。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">if(user.hasPermission(&apos;用户报表查看&apos;))&#123;</div><div class="line">	//系统资源内容</div><div class="line">	//用户报表查看</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这种方式可以解决用户权限变更，不用修改权限控制的代码。<br>需要变更权限，只需要去分配权限模块，给那些用户去分配相应的权限即可。</p>
+<p><strong>建议使用，基于资源的访问控制，来完成权限管理工作。</strong></p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[shiro系列3-Shiro简介]]></title>
+      <url>http://yoursite.com/2016/08/09/Shiro%E7%AE%80%E4%BB%8B/</url>
+      <content type="html"><![CDATA[<h2 id="什么是shiro"><a href="#什么是shiro" class="headerlink" title="什么是shiro"></a>什么是shiro</h2><p>Apache Shiro一个功能强大，使用简单的Java安全框架，它为开发人员提供一个直观而全面的认证，授权，加密及会话管理的解决方案。  </p>
+<h3 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h3><p>实际上，Shiro的主要功能是管理应用程序中与安全相关的全部，同时尽可能支持多种实现方法。Shiro是建立在完善的接口驱动设计和面向对象原则之上的，支持各种自定义行为。Shiro提供的默认实现，使其能完成与其他安全框架同样的功能。   </p>
+<p>功能点描述：</p>
+<ol>
+<li>身份认证/登录，验证用户是不是拥有相应的身份；</li>
+<li>授权，即权限验证，验证某个已认证的用户是否拥有某个权限；即判断用户是否能做事情，常见的如：验证某个用户是否拥有某个角色。或者细粒度的验证某个用户对某个资源是否具有某个权限；</li>
+<li>会话管理，即用户登录后就是一次会话，在没有退出之前，它的所有信息都在会话中；会话可以是普通JavaSE环境的，也可以是如Web环境的；</li>
+<li>加密，保护数据的安全性，如密码加密存储到数据库，而不是明文存储；</li>
+<li>Web支持，可以非常容易的集成到Web环境；<br>Caching：缓存，比如用户登录后，其用户信息、拥有的角色/权限不必每次去查，这样可以提高效率；</li>
+<li>shiro支持多线程应用的并发验证，即如在一个线程中开启另一个线程，能把权限自动传播过去；</li>
+<li>提供测试支持；</li>
+<li>允许一个用户假装为另一个用户（如果他们允许）的身份进行访问；</li>
+<li>记住我，这个是非常常见的功能，即一次登录后，下次再来的话不用登录了。</li>
+</ol>
+<blockquote>
+<p><a href="http://shiro.apache.org/reference.html" target="_blank" rel="external">官网使用手册</a></p>
+</blockquote>
+<h3 id="发展历程"><a href="#发展历程" class="headerlink" title="发展历程"></a>发展历程</h3><p>Shiro最早的名字是JSecurity，后来更名为Shiro并成为Apache的孵化项目。现在的版本到了1.3.0</p>
+<h3 id="Spring-Security"><a href="#Spring-Security" class="headerlink" title="Spring Security"></a>Spring Security</h3><p>Spring Security是一个能够为基于Spring的企业应用系统提供声明式的安全访问控制解决方案的安全框架。它提供了一组可以在Spring应用上下文中配置的Bean，充分利用了Spring IoC，DI（控制反转Inversion of Control ,DI: Dependency Injection 依赖注入）和AOP（面向切面编程）功能，为应用系统提供声明式的安全访问控制功能，减少了为企业系统安全控制编写大量重复代码的工作。</p>
+<p>对比：</p>
+<ol>
+<li>Shiro is much easier to use , implement and most importantly understand than Spring</li>
+<li>The only reason Spring Security is much more well-known is because of the brand name “Spring” which is famous for simplicity , but ironically many find installing Spring Security little difficult</li>
+<li>Spring Security , however has a better community support</li>
+<li>Apache Shiro has an additional module over Spring Security of handling Cryptography</li>
+</ol>
+<h3 id="shiro的优势"><a href="#shiro的优势" class="headerlink" title="shiro的优势"></a>shiro的优势</h3><ul>
+<li>Spring Security和spring依赖过于紧密，而且使用没有shiro来的简单。</li>
+<li>shiro不依赖与spring</li>
+<li>shiro不仅可以实现web应用的权限管理，还可以实现C/S系统、分布式系统权限管理</li>
+<li>shiro属于比较轻量，越来越多的企业中也在使用shiro</li>
+</ul>
+<hr>
+<h2 id="shiro的架构"><a href="#shiro的架构" class="headerlink" title="shiro的架构"></a>shiro的架构</h2><p><img src="https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&amp;quality=100&amp;size=b4000_4000&amp;sec=1471217447&amp;di=8346196df047c4d1393d513ab0c02d7b&amp;src=http://static.oschina.net/uploads/space/2014/0210/104057_NHqv_1417419.png" alt="shiro架构"></p>
+<ul>
+<li>subject<br>主体</li>
+<li>securityManager<br>安全管理器，主体访问和授权都是通过securityManager来进行，这是一个很大的容器？里面有很多的模块来实现相应的功能</li>
+<li>authenticator<br>认证器，主体进行认证最终通过authenticator来进行的</li>
+<li>authorizer<br>授权器，主体进行授权最终通过authorizer来进行</li>
+<li>sessionManager<br>web应用中，一般用中间件web容器对session进行管理。shiro自己也提供了一套session管理的方式。</li>
+<li>sessionDAO<br>通过sessionDAO来管理session数据，针对个性化的session数据存储，需要用到sessionDAO</li>
+<li>catchManager<br>缓存管理器，主要对session数据和授权数据进行缓存，比如将授权数据通过sessionManager进行缓存管理，和ehcache进行整合。管理的只是业务逻辑，真正的缓存操作还是要靠其他的框架来做。</li>
+<li>Realm（领域）<br>相当于数据源，通过realm来存取认证、授权的相关数据。<br>在realm中存在授权和认证的逻辑。</li>
+<li>cryptography<br>密钥、密码，就是一个安全加密的方法，提供了一套加密和解密的组件以供开发。比如md5散列算法，没办法解密</li>
+</ul>
+<hr>
+<h2 id="开始使用shiro"><a href="#开始使用shiro" class="headerlink" title="开始使用shiro"></a>开始使用shiro</h2><h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><ul>
+<li>JDK 1.7.0_79</li>
+<li>Maven 3.0.3</li>
+<li>Tomcat 7.0.39</li>
+<li><a href="http://www.apache.org/dyn/closer.cgi/shiro/1.3.0/shiro-root-1.3.0-source-release.zip" target="_blank" rel="external">Shiro 1.3.0</a></li>
+</ul>
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><ul>
+<li>解压源代码  </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ cd shiro-root-1.3.0\samples\quickstart</div><div class="line"></div><div class="line">// 执行java中的main函数</div><div class="line">$ mvn compile exec:java</div></pre></td></tr></table></figure>
+<h3 id="Subject"><a href="#Subject" class="headerlink" title="Subject"></a>Subject</h3><p>Subject 表示某一项（如一个人）的一组相关信息。此类信息包括 Subject 的身份，以及与安全相关的属性（例如，密码和加密密钥）。 </p>
+<p>Subject 可以潜在地具有多重身份。每个身份被表示为 Subject 中的一个 Principal。Principal 只是把名称绑定到 Subject。例如，Subject 正好是一个人（Alice）时,它可以有两个主体：一个把她驾驶证上的名称 “Alice Bar” 绑定到 Subject，另一个把学生身份证上的号码 “999-99-9999” 绑定到 Subject。即使每个主体具有不同的名称，它们也都指的是同一个 Subject。 </p>
+<p>Subject 也可以拥有与安全相关的属性，它们被称为证书。敏感的证书需要特殊的保护，例如私有加密密钥存储在私有的证书 Set 中。将证书设计为共享的，例如公钥证书或 Kerberos 服务票据存储在一个公开证书 Set 中。访问和修改不同的证书 Set 需要不同的权限。 </p>
+<h3 id="Quickstart-java"><a href="#Quickstart-java" class="headerlink" title="Quickstart.java"></a>Quickstart.java</h3><p>Quickstart.java中包含刚刚提到的所有内容(认证、授权等等)，通过这个简单的示例可以熟悉Shiro的API。   </p>
+<p>首先，几乎所有的环境下，都可以通过这种方式获取当前用户：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// get the currently executing user:</span></div><div class="line">Subject currentUser = SecurityUtils.getSubject();</div></pre></td></tr></table></figure></p>
+<p>通过SecurityUtils.getSubject()，就可以获取当前Subject。Subject是应用中用户的一个特定安全的缩影，虽然感觉上直接使用User会更贴切，但是实际上它的意义远远超过了User。而且每个应用程序都会有自己的用户以及框架，我们可不想和它们混淆在一起，况且Subject就是安全领域公认的名词。  </p>
+<p>在单应用系统中，调用getSubject()会返回一个Subject，它是位于应用程序中特定位置的用户信息；在服务器中运行的情况下(比如web应用)，getSubject会返回一个位于当前线程或请求中的用户信息。 现在你已经得到了Subject对象，那么用它可以做什么呢？</p>
+<h4 id="session"><a href="#session" class="headerlink" title="session"></a>session</h4><p>如果你想得到应用中用户当前Session的其他参数，可以这样获取Session对象：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Session session = currentUser.getSession();</div><div class="line"></div><div class="line">session.setAttribute( <span class="string">"someKey"</span>, <span class="string">"aValue"</span> );</div></pre></td></tr></table></figure></p>
+<p>这个Session对象是Shiro中<strong>特有</strong>的对象，它和我们经常使用的HttpSession非常相似，但还提供了额外的东西，其中与HttpSession最大的不同就是Shiro中的Session不依赖HTTP环境(换句话说，可以在非HTTP 容器下运行)。</p>
+<p>如果将Shiro部署在web应用程序中，那么这个Session就是基于HttpSession的。但是像QuickStart示例那样，在非web环境下使用，Shiro则默认使用EnterpriseSessionManagment。也就是说，不论在应用中的任何一层使用同样的API，却不需要考虑部署环境，这一优点为应用打开一个全新的世界，因为应用中要获取Session对象再也不用依赖于HttpSession或者EJB的会话Bean。而且任何客户端技术都可以共享session 数据。 </p>
+<p>现在你可以得到当前Subject和它的Session对象。那么我们如何验证比如角色和权限这些东西呢？</p>
+<p>很简单，可以通过已得到的user对象进行验证。Subject对象代表当前用户，但是，谁才是当前用户呢？他们可是匿名用户啊。也就是说，必须登录才能获取到当前用户。没问题，这样就可以搞定：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// let's login the current user so we can check against roles and permissions:</span></div><div class="line"><span class="keyword">if</span> (!currentUser.isAuthenticated()) &#123;</div><div class="line">    UsernamePasswordToken token = <span class="keyword">new</span> UsernamePasswordToken(<span class="string">"lonestarr"</span>, <span class="string">"vespa"</span>);</div><div class="line">    token.setRememberMe(<span class="keyword">true</span>);</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        currentUser.login(token);</div><div class="line">    &#125; <span class="keyword">catch</span> (UnknownAccountException uae) &#123;</div><div class="line">        log.info(<span class="string">"There is no user with username of "</span> + token.getPrincipal());</div><div class="line">    &#125; <span class="keyword">catch</span> (IncorrectCredentialsException ice) &#123;</div><div class="line">        log.info(<span class="string">"Password for account "</span> + token.getPrincipal() + <span class="string">" was incorrect!"</span>);</div><div class="line">    &#125; <span class="keyword">catch</span> (LockedAccountException lae) &#123;</div><div class="line">        log.info(<span class="string">"The account for username "</span> + token.getPrincipal() + <span class="string">" is locked.  "</span> +</div><div class="line">                <span class="string">"Please contact your administrator to unlock it."</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// ... catch more exceptions here (maybe custom ones specific to your application?</span></div><div class="line">    <span class="keyword">catch</span> (AuthenticationException ae) &#123;</div><div class="line">        <span class="comment">//unexpected condition?  error?</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>登陆过程中的异常会被捕获，不同的异常有对应的处理方式，也可以直接反馈给用户，说登陆错误请重新登陆，不用处理异常，直接让他重新登陆。</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[DispatcherServlet前端控制器的配置]]></title>
+      <url>http://yoursite.com/2016/08/08/DispatcherServlet%E5%89%8D%E7%AB%AF%E6%8E%A7%E5%88%B6%E5%99%A8%E7%9A%84%E9%85%8D%E7%BD%AE/</url>
+      <content type="html"><![CDATA[<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- springmvc的前端控制器 --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">servlet</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>springmvc<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">servlet-class</span>&gt;</span>org.springframework.web.servlet.DispatcherServlet<span class="tag">&lt;/<span class="name">servlet-class</span>&gt;</span></div><div class="line">  <span class="comment">&lt;!-- contextConfigLocation配置springmvc加载的配置文件（配置处理器映射器、适配器等等）</span></div><div class="line">       如果不去配置，那么默认加载的是/WEB-INF/servlet名称-servlet.xml（springmvc-servlet.xml）</div><div class="line">       一般情况下都会指定路径，以后会有很多框架要放进来</div><div class="line">  --&gt;</div><div class="line">  <span class="tag">&lt;<span class="name">init-param</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>contextConfigLocation<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>classpath:springmvc.xml<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">init-param</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">servlet</span>&gt;</span></div><div class="line">	</div><div class="line"><span class="tag">&lt;<span class="name">servlet-mapping</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>springmvc<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></div><div class="line">  <span class="comment">&lt;!-- 这个有多种方式配置</span></div><div class="line">       第一种：*.action，访问以action结尾的DispatcherServlet进行解析</div><div class="line">       第二种：/，所有访问的地址都由DispatcherServlet来进行解析，对于静态的文件解析</div><div class="line">       使用此种方法可以实现RESTful风格的url</div><div class="line">       第三种：/*，这样配置不对，最终要转发到一个jsp页面时，仍然会用DispatcherServlet</div><div class="line">       来解析页面，不能根据jsp页面来找到Handler，会报错</div><div class="line">  --&gt;</div><div class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>*.action<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">servlet-mapping</span>&gt;</span></div></pre></td></tr></table></figure>]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[斐波那契数列]]></title>
+      <url>http://yoursite.com/2016/08/04/%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E6%95%B0%E5%88%97/</url>
+      <content type="html"><![CDATA[<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.hundsun.netease;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * Created by zeewane on 2016/8/4/0004.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FibonacciDemo</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        System.out.println(Fibonacci(<span class="number">39</span>));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">Fibonacci</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</div><div class="line">        <span class="keyword">int</span> preNum = <span class="number">1</span>;</div><div class="line">        <span class="keyword">int</span> prePreNum = <span class="number">0</span>;</div><div class="line">        <span class="keyword">int</span> result = <span class="number">0</span>;</div><div class="line">        <span class="keyword">if</span> (n == <span class="number">0</span>)</div><div class="line">            <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">        <span class="keyword">if</span> (n == <span class="number">1</span>)</div><div class="line">            <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i &lt;= n; i++) &#123;</div><div class="line">            result = preNum + prePreNum;</div><div class="line">            prePreNum = preNum;</div><div class="line">            preNum = result;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> result;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>用循环的方法去解决，不要用递归。</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[java形参和实参]]></title>
+      <url>http://yoursite.com/2016/08/03/java%E5%BD%A2%E5%8F%82%E5%92%8C%E5%AE%9E%E5%8F%82/</url>
+      <content type="html"><![CDATA[<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.hundsun;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * Created by zeewane on 2016/8/2/0002.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Parameter</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"></div><div class="line">        <span class="keyword">int</span>[] arr = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> a : arr) &#123;</div><div class="line">            System.out.println(a);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        change(arr);</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> b : arr) &#123;</div><div class="line">            System.out.println(b);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        change2(arr[<span class="number">0</span>]);</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> c : arr) &#123;</div><div class="line">            System.out.println(c);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">change</span><span class="params">(<span class="keyword">int</span>[] ints)</span> </span>&#123;</div><div class="line">        ints[<span class="number">0</span>] = <span class="number">10</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">change2</span><span class="params">(<span class="keyword">int</span> a)</span> </span>&#123;</div><div class="line">        a = <span class="number">11</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//1,2,3,4,5</span></div><div class="line"><span class="comment">//10,2,3,4,5</span></div><div class="line"><span class="comment">//10,2,3,4,5</span></div></pre></td></tr></table></figure>
+<p>因为第一个change传入的是地址，是真的在数组上干活</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[哈夫曼树构造方法]]></title>
+      <url>http://yoursite.com/2016/08/02/%E5%93%88%E5%A4%AB%E6%9B%BC%E6%A0%91%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95/</url>
+      <content type="html"><![CDATA[<p>在一般的数据结构的书中，树的那章后面，著者一般都会介绍一下哈夫曼(HUFFMAN)<br>树和哈夫曼编码。哈夫曼编码是哈夫曼树的一个应用。哈夫曼编码应用广泛，如<br>JPEG中就应用了哈夫曼编码。</p>
+<h2 id="什么是哈夫曼树"><a href="#什么是哈夫曼树" class="headerlink" title="什么是哈夫曼树"></a>什么是哈夫曼树</h2><p>首先介绍什么是哈夫曼树。哈夫曼树又称最优二叉树，<br>是一种带权路径长度最短的二叉树。所谓树的带权路径长度，就是树中所有的叶结点的权值乘上其到根结点的 路径长度（若根结点为0层，叶结点到根结点的路径长度为叶结点的层数）。树的带权路径长度记为<code>WPL= (W1*L1+W2*L2+W3*L3+...+Wn*Ln)</code>，N个权值<code>Wi(i=1,2,...n)</code>构成一棵有N个叶结点的二叉树，相应的叶结点的路径长度为<code>Li(i=1,2,...n)</code>。可以证明哈夫曼树的WPL是最小的。 </p>
+<h2 id="编码步骤"><a href="#编码步骤" class="headerlink" title="编码步骤"></a>编码步骤</h2><ol>
+<li>对给定的n个权值{W1,W2,W3,…,Wi,…,Wn}构成n棵二叉树的初始集合<code>F={T1,T2,T3,...,Ti,...,Tn}</code>，其中每棵二叉树Ti中只有一个权值为Wi的根结点，它的左右子树均为空。（为方便在计算机上实现算法，一般还要求以Ti的权值Wi的升序排列。）</li>
+<li>在F中选取两棵根结点权值最小的树作为新构造的二叉树的左右子树，新二叉树的根结点的权值为其左右子树的根结点的权值之和。</li>
+<li>从F中删除这两棵树，并把这棵新的二叉树同样以升序排列加入到集合F中。</li>
+<li>重复二和三两步，直到集合F中只有一棵二叉树为止。 </li>
+</ol>
+<p>简单的理解就是，假如我有A,B,C,D,E五个字符，出现的频率（即权值）分别为5,4,3,2,1,那么我们第一步先取两个最小权值作为左右子树构造一个新树，即取1，2构成新树，其结点为1+2=3，如图：<br><img src="http://images.cnblogs.com/cnblogs_com/Jezze/201112/201112231832078695.png" alt="image"><br>虚线为新生成的结点，第二步再把新生成的权值为3的结点放到剩下的集合中，所以集合变成{5,4,3,3}，再根据第二步，取最小的两个权值构成新树，如图：<br><img src="http://images.cnblogs.com/cnblogs_com/Jezze/201112/201112231832087092.png" alt="image"><br>再依次建立哈夫曼树，如下图：<br><img src="http://images.cnblogs.com/cnblogs_com/Jezze/201112/201112231832084301.jpg" alt="image"><br>其中各个权值替换对应的字符即为下图：<br><img src="http://images.cnblogs.com/cnblogs_com/Jezze/201112/201112231832086286.jpg" alt="image"></p>
+<p>所以各字符对应的编码为：A-&gt;11,B-&gt;10,C-&gt;00,D-&gt;011,E-&gt;010</p>
+<p>霍夫曼编码是一种无前缀编码。解码时不会混淆。其主要应用在数据压缩，加密解密等场合。 </p>
+<p><a href="http://www.cnblogs.com/Jezze/archive/2011/12/23/2299884.html" target="_blank" rel="external">以上原文</a></p>
+<h2 id="个人理解"><a href="#个人理解" class="headerlink" title="个人理解"></a>个人理解</h2><ul>
+<li>构造一个哈夫曼树，首先要把那些带权值的叶子节点从小到大排序</li>
+<li>挑出最小的两个，构成一个二叉树，<strong>小的在左边</strong></li>
+<li>然后把这时候，这两个节点相加的出来的父节点的值，放入到刚才的那个带权值的数组中去，然后重复这个步骤，挑出一个最小的然后继续画？应该就是这样</li>
+<li>哈弗曼编码就是左边是0，右边是1，然后边数边写，从根节点开始往下走</li>
+</ul>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[TCP协议状态变迁]]></title>
+      <url>http://yoursite.com/2016/08/02/TCP%E5%8D%8F%E8%AE%AE%E7%8A%B6%E6%80%81%E5%8F%98%E8%BF%81/</url>
+      <content type="html"><![CDATA[<p><img src="http://img.my.csdn.net/uploads/201210/23/1350996969_2313.jpg" alt="image"></p>
+<h2 id="全部状态"><a href="#全部状态" class="headerlink" title="全部状态"></a>全部状态</h2><p>一共有11种，分为客户端独有、服务端独有和共有。</p>
+<h3 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h3><ul>
+<li>SYN_SENT</li>
+<li>FIN_WAIT1</li>
+<li>FIN_WAIT2</li>
+<li>CLOSING </li>
+<li>TIME_WAIT</li>
+</ul>
+<h3 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h3><ul>
+<li>LISTEN </li>
+<li>SYN_RCVD </li>
+<li>CLOSE_WAIT</li>
+<li>LAST_ACK </li>
+</ul>
+<h3 id="共有"><a href="#共有" class="headerlink" title="共有"></a>共有</h3><ul>
+<li>CLOSED </li>
+<li>ESTABLISHED</li>
+</ul>
+<h2 id="状态变迁"><a href="#状态变迁" class="headerlink" title="状态变迁"></a>状态变迁</h2><h3 id="建立连接时的状态变迁"><a href="#建立连接时的状态变迁" class="headerlink" title="建立连接时的状态变迁"></a>建立连接时的状态变迁</h3><p>一开始，建立连接之前服务器和客户端的状态都为CLOSED。服务器创建socket后开始监听，变为LISTEN状态。客户端请求建立连接，向服务器发送SYN报文，客户端的状态变为SYN_SENT。服务器收到客户端的报文后向客户端发送ACK和SYN报文，此时服务器的状态变为SYN_RCVD。然后，客户端收到ACK、SYN，就向服务器发送ACK，客户端状态变为ESTABLISHED，服务器收到客户端的ACK后也变为ESTABLISHED。此时，3次握手完成，连接建立！</p>
+<h3 id="断开连接时的状态变迁"><a href="#断开连接时的状态变迁" class="headerlink" title="断开连接时的状态变迁"></a>断开连接时的状态变迁</h3><p>由于tcp连接是全双工的，断开连接会比建立连接麻烦一点点。客户端先向服务器发送FIN报文，请求断开连接，其状态变为FIN_WAIT1。服务器收到FIN后向客户端发生ACK，服务器状态变为CLOSE_WAIT。客户端收到ACK后就进入FIN_WAIT2状态。此时连接已经断开了一半了。如果服务器还有数据要发送给客户端，就会继续发送。直到发完了，就发送FIN报文，此时服务器进入LAST_ACK状态。客户端收到服务器的FIN后，马上发送ACK给服务器，此时客户端进入TIME_WAIT状态，再过了2MSL长的时间后进入CLOSED状态。服务器收到客户端的ACK就进入CLOSED状态。</p>
+<h3 id="CLOSING状态"><a href="#CLOSING状态" class="headerlink" title="CLOSING状态"></a>CLOSING状态</h3><p>CLOSING状态表示客户端发生了FIN，但没有收到服务器的ACK，却收到了服务器的FIN。这种情况发生在服务器发送的ACK丢包的时候，因为网络传输有时会有意外。</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[java中的构造块代码和构造函数]]></title>
+      <url>http://yoursite.com/2016/08/01/java%E4%B8%AD%E7%9A%84%E6%9E%84%E9%80%A0%E5%9D%97%E4%BB%A3%E7%A0%81%E5%92%8C%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/</url>
+      <content type="html"><![CDATA[<h2 id="代码块"><a href="#代码块" class="headerlink" title="代码块"></a>代码块</h2><p>构造代码块中的代码也是在构造方法中执行的。在编译时的编译器看来会默认将构造代码块中的代码移动到构造方法中，并且移动到构造方法内容的前面。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestCode</span> </span>&#123;</div><div class="line">     </div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="title">TestCode</span><span class="params">()</span> </span>&#123;</div><div class="line">    System.out.println(<span class="string">"构造方法"</span>);</div><div class="line">  &#125;</div><div class="line">     </div><div class="line">  &#123;</div><div class="line">    System.out.println(<span class="string">"代码块"</span>);</div><div class="line">  &#125;</div><div class="line">     </div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">    <span class="keyword">new</span> TestCode();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>相当于</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestCode</span> </span>&#123;</div><div class="line">     </div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="title">TestCode</span><span class="params">()</span> </span>&#123;</div><div class="line">    System.out.println(<span class="string">"代码块"</span>);</div><div class="line">    System.out.println(<span class="string">"构造方法"</span>);</div><div class="line">  &#125;</div><div class="line">     </div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">    <span class="keyword">new</span> TestCode();</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//构造块</span></div><div class="line"><span class="comment">//构造方法</span></div></pre></td></tr></table></figure></p>
+<h2 id="校招题"><a href="#校招题" class="headerlink" title="校招题"></a>校招题</h2><p>那么去理解网易的那个题：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">X</span></span>&#123;</div><div class="line">  Y y = <span class="keyword">new</span> Y();</div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="title">X</span><span class="params">()</span></span>&#123;</div><div class="line">    System.out.println(<span class="string">"X"</span>);</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Y</span></span>&#123;</div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="title">Y</span><span class="params">()</span></span>&#123;</div><div class="line">    System.out.println(<span class="string">"Y"</span>);</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Z</span> <span class="keyword">extends</span> <span class="title">X</span></span>&#123;</div><div class="line">  Y y = <span class="keyword">new</span> Y();</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="title">Z</span><span class="params">()</span></span>&#123;</div><div class="line">    System.out.println(<span class="string">"Z"</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">    <span class="keyword">new</span> Z();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><ol>
+<li>首先去new一个Z，但是Z继承了X，所以先要去执行X的构造函数</li>
+<li>发现X中有构造代码块和构造函数，所以先要去执行构造代码块，也就是<code>new Y()</code></li>
+<li>打印一个Y</li>
+<li>然后继续执行X的构造函数，打印一个X</li>
+<li>执行完Z的父类的new后，开始执行Z自己本身的new过程</li>
+<li>发现Z中也有构造代码块，所以要先去执行构造代码块<code>new Y()</code>，再次打印一个Y</li>
+<li>然后执行Z的构造函数，打印一个Z</li>
+<li>最后的结果是<code>YXYZ</code></li>
+</ol>
+<h2 id="静态代码块"><a href="#静态代码块" class="headerlink" title="静态代码块"></a>静态代码块</h2><ol>
+<li>父类的静态成员赋值和静态块 （静态块和静态成员的顺序为，谁在前面谁先执行（在不出错的情况下）</li>
+<li>子类的静态成员和静态块 </li>
+<li>父类的构造方法 </li>
+<li>父类的成员赋值和初始化块 </li>
+<li>父类的构造方法中的其它语句 </li>
+<li>子类的成员赋值和初始化块 </li>
+<li>子类的构造方法中的其它语句 </li>
+</ol>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Spring MVC框架概述]]></title>
+      <url>http://yoursite.com/2016/07/30/Spring-MVC/</url>
+      <content type="html"><![CDATA[<h2 id="简要概述"><a href="#简要概述" class="headerlink" title="简要概述"></a>简要概述</h2><h3 id="springmvc框架原理"><a href="#springmvc框架原理" class="headerlink" title="springmvc框架原理"></a>springmvc框架原理</h3><ul>
+<li>前端控制器</li>
+<li><strong>处理器映射器</strong></li>
+<li><strong>处理器适配器</strong></li>
+<li>视图解析器</li>
+</ul>
+<p>处理器适配中的<strong>注解开发</strong>一定要懂</p>
+<h3 id="springmvc注解开发"><a href="#springmvc注解开发" class="headerlink" title="springmvc注解开发"></a>springmvc注解开发</h3><ul>
+<li>常用的注解</li>
+<li>参数绑定（Request请求过来的参数，要被框架接收然后处理）<ul>
+<li>简单类型</li>
+<li>POJO（Plain Old Java Object，简单老式java对象）</li>
+<li><strong>自定义参数绑定</strong></li>
+</ul>
+</li>
+</ul>
+<h2 id="什么是spring-mvc"><a href="#什么是spring-mvc" class="headerlink" title="什么是spring mvc"></a>什么是spring mvc</h2><ul>
+<li>spring mvc是在<strong>表现层</strong>的东西</li>
+<li>spring mvc是spring框架的一个模块，spring mvc和spring不需要通过中间整合层进行整合，本来就是spring自己的一部分</li>
+<li>是一个基于mvc的web框架<h3 id="什么是mvc"><a href="#什么是mvc" class="headerlink" title="什么是mvc"></a>什么是mvc</h3></li>
+<li>mvc是一种设计模式  </li>
+</ul>
+<blockquote>
+<p>在B/S系统中，模型（Model）是没有办法直接把数据填充到视图（View）里面的，需要把数据返回给控制器（Controller），然后控制器拿着数据去渲染页面，同时给用户一个response相应。  </p>
+</blockquote>
+<ul>
+<li><strong>模型（Model）</strong><br>这是一个很大的概念，不仅仅是pojo，action、service、dao都是模型的一部分。</li>
+<li><strong>控制器（Controller）</strong><br>这个在struts2中，就是filter，其实在spring mvc这边，这个叫<strong>前端控制器</strong>。spring mvc中是servlet，名字叫<code>DispatcherServlet</code>。<br>action也被叫做后端控制器，在spring mvc中，是 Handler处理器，平常被叫作Controller。  </li>
+<li><strong>映射处理器（HandlerMapping）</strong><br>前端控制器接收到的数据后要调用Handler，但是前端控制器不知道具体是哪个handler来处理这个url请求，所以这两个东西中间要有另外一层，来告诉前端控制器，去调用具体哪一个handler，这就是<strong>处理器映射器(HanlerMapping)</strong>。  </li>
+</ul>
+<blockquote>
+<p>映射处理器返回的是一个执行链（HandlerExecutionChain），是一个底层的封装类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">HandlerExecutionChain&#123;</div><div class="line">  <span class="comment">//可以有多个拦截器</span></div><div class="line">  HandlerInterceptor1</div><div class="line">  HandlerInterceptor2</div><div class="line">  </div><div class="line">  Handler</div><div class="line">  </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h2 id="从Request到Response"><a href="#从Request到Response" class="headerlink" title="从Request到Response"></a>从Request到Response</h2><h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ol>
+<li>发起请求到前端控制器(DispatcherServlet)</li>
+<li>前端控制器请求HandlerMapping查找 Handler<br> 可以根据xml配置、注解进行查找</li>
+<li>处理器映射器HandlerMapping向前端控制器返回Handler</li>
+<li>前端控制器调用处理器适配器去执行Handler</li>
+<li>处理器适配器去执行Handler</li>
+<li>Handler执行完成给适配器返回ModelAndView</li>
+<li>处理器适配器向前端控制器返回ModelAndView<br> ModelAndView是springmvc框架的一个底层对象，包括 Model和view</li>
+<li>前端控制器请求视图解析器去进行视图解析<br> 根据逻辑视图名解析成真正的视图(jsp)</li>
+<li>视图解析器向前端控制器返回View</li>
+<li>前端控制器进行视图渲染<br>视图渲染将模型数据(在ModelAndView对象中)填充到request域</li>
+<li>前端控制器向用户响应结果 </li>
+</ol>
+<h3 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h3><ul>
+<li>前端控制器DispatcherServlet（<strong>不需要程序员开发</strong>）<br>作用接收请求，响应结果，相当于转发器，中央处理器。<br>有了DispatcherServlet减少了其它组件之间的耦合度。</li>
+<li>处理器映射器HandlerMapping(<strong>不需要程序员开发</strong>)<br>作用：根据请求的url查找Handler</li>
+<li>处理器适配器HandlerAdapter<br>作用：按照特定规则（HandlerAdapter要求的规则）去执行Handler</li>
+<li>处理器Handler(<strong>需要程序员开发</strong>)<br>注意：编写Handler时按照HandlerAdapter的要求去做，这样适配器才可以去正确执行Handler</li>
+<li>视图解析器View resolver(<strong>不需要程序员开发</strong>)<br>作用：进行视图解析，根据逻辑视图名解析成真正的视图（view）</li>
+<li>视图View(需要程序员开发jsp)<br>View是一个接口，实现类支持不同的View类型（jsp、freemarker、pdf…）</li>
+</ul>
+<p>需要开发的，就是view中的jsp和处理器Handler。  </p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[java中的date插入到mysql的datetime中的方法]]></title>
+      <url>http://yoursite.com/2016/07/29/java%E4%B8%AD%E7%9A%84date%E6%8F%92%E5%85%A5%E5%88%B0mysql%E7%9A%84datetime%E4%B8%AD%E7%9A%84%E6%96%B9%E6%B3%95/</url>
+      <content type="html"><![CDATA[<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.hundsun;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.sql.Timestamp;</div><div class="line"><span class="keyword">import</span> java.util.Date;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * Created by zeewane on 2016/7/29/0029.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DateDemo</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        Date date = <span class="keyword">new</span> Date();</div><div class="line">        Timestamp timestamp = <span class="keyword">new</span> Timestamp(date.getTime());</div><div class="line">        System.out.println(timestamp);<span class="comment">//2016-07-29 16:28:44.526</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[MyBatis分页查询]]></title>
+      <url>http://yoursite.com/2016/07/28/MyBatis%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2/</url>
+      <content type="html"><![CDATA[<h2 id="实体类"><a href="#实体类" class="headerlink" title="实体类"></a>实体类</h2><ul>
+<li>实体类的属性都要用元类型的包装类，如<br><code>private Integer userId;</code>  <h2 id="DAO"><a href="#DAO" class="headerlink" title="DAO"></a>DAO</h2></li>
+<li>普通的dao接口应该继承IEntity接口<strong>不是实现，是继承</strong></li>
+<li>接口com.hundsun.jresplus.dao.common.func.IEntityDAO定义了基础的<strong>增删改取</strong>和<strong>查询</strong>功能，普通DAO接口应<strong>继承</strong>该接口。</li>
+<li>IEntityDAO约束两个泛型‘T’和‘P’。&lt; T &gt;表示实体类；&lt; P &gt;表示查询参数，应包含一些分页信息，查询参数还应包含其他查询条件，排序方式等信息.如<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IParticipationDAO</span>   </span></div><div class="line">  <span class="keyword">extends</span> <span class="title">IEntityDAO</span>&lt;<span class="title">Participation</span>, <span class="title">ParticipationQry</span>&gt;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="映射文件"><a href="#映射文件" class="headerlink" title="映射文件"></a>映射文件</h2><ul>
+<li>文件名要和DAO接口一致</li>
+<li><code>&lt;mapper&gt;</code>结点下定义一个id=”BaseResultMap”的<code>&lt;resultMap&gt;</code>的结点，该映射内容用来定义实体与数据表的对应关系。</li>
+<li>Mybatis需要配置<code>&lt;insert/&gt;</code> 、<code>&lt;update/&gt;</code>、<code>&lt;delete/&gt;</code>、<code>&lt;select/&gt;</code>等操作节点来实现操作功能，id属性需要与DAO接口定义的方法名一致。</li>
+<li>最上面对表的各个属性的映射一定要写正确了</li>
+</ul>
+<h2 id="t2-sdk"><a href="#t2-sdk" class="headerlink" title="t2 sdk"></a>t2 sdk</h2><p>cep和t2sdk是差不多的<br>在他那层看到的是包，是二进制的东西<br>但是写java的希望看到对象<br>cep本身有路由的功能，一个java版本的server<br>cep里面是封装过的</p>
+<p>会拦截带有（ListPage）字样的sql，然后会根据在配置文件里设置的数据库类型，往后面添加分页的sql语句，如mysql就会自动往后面加上limit 10,5，代表从第十条开始，一共五条</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"> <span class="comment">&lt;!-- 分页处理拦截器，会去拦截带有ListPage的sql语句？--&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"paginationInterceptor"</span> <span class="attr">class</span>=<span class="string">"com.hundsun.jresplus.dao.mybatis3.interceptor.PaginationInterceptor"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"pageMapper"</span> <span class="attr">value</span>=<span class="string">".*ListPage.*"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></div></pre></td></tr></table></figure>
+<h2 id="关键"><a href="#关键" class="headerlink" title="关键"></a>关键</h2><p>Qry查询参数类是关键，页面上只要传个start过来，会自动封装成ParticipationQry然后传给远程的service，然后去调用dao完成相应的功能然后返回，可以自定义一个pageUtil类，把页面的那些信息也都放进去，通过计算得到LastPage、currentPage等等然后一起把pageUtil返回到页面上，页面上直接去获取这些值，而不是在页面上进行计算。</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Jade学习笔记1]]></title>
+      <url>http://yoursite.com/2016/07/27/jade%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/</url>
+      <content type="html"><![CDATA[<h2 id="什么是Jade"><a href="#什么是Jade" class="headerlink" title="什么是Jade"></a>什么是Jade</h2><p>Jade是一种网页模板渲染的引擎，通过一些简单的方式就可以自动渲染成为html的样式，不必每次都去写一堆尖括号标签。<br>我感觉和markdown有点类似呢……虽然两个东西区别蛮大的，markdown类似于一种标记语言，书写文字的时候可以直接通过一些符号来实现相应的格式，而不是通过鼠标去工具栏那边点啊点，而且排版还很漂亮，实时预览。Jade也是使用一些标签，然后Jade引擎会自动翻译成html的语言。</p>
+<blockquote>
+<p>Jade使用一些标签来标记如何生成HTML，Jade模板文件看起来很不像HTML文件，但它的模板文件小而整洁。Jade是一款高性能简洁易懂的模板引擎，Jade是Haml的Javascript实现，在服务端（NodeJS）及客户端均有支持。<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">//Jade</div><div class="line">div#container</div><div class="line"></div><div class="line">//after Jade render</div><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"container&gt;&lt;/div&gt;</span></span></div></pre></td></tr></table></figure></p>
+</blockquote>
+<h2 id="Jade的安装"><a href="#Jade的安装" class="headerlink" title="Jade的安装"></a>Jade的安装</h2><h3 id="首先要安装nodejs和npm"><a href="#首先要安装nodejs和npm" class="headerlink" title="首先要安装nodejs和npm"></a>首先要安装nodejs和npm</h3><ul>
+<li><a href="http://www.nodejs.org/" target="_blank" rel="external">nodejs</a></li>
+<li>装nodejs的时候会自动给安装好npm<br><code>npm：nodejs package manager，js的包管理器，上面很多很多现成的包，需要的时候只要一条命令就可以去下载下来使用，也可以往上面上传。</code>  </li>
+</ul>
+<h3 id="通过npm安装Jade"><a href="#通过npm安装Jade" class="headerlink" title="通过npm安装Jade"></a>通过npm安装Jade</h3><p><code>$ npm install -g Jade</code><br>输入<code>Jade version</code>，若显示版本则代表安装成功</p>
+<h2 id="使用Jade"><a href="#使用Jade" class="headerlink" title="使用Jade"></a>使用Jade</h2><ol>
+<li><p>随便写一个<code>demo.Jade</code>  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">doctype html</div><div class="line">html</div><div class="line">    head</div><div class="line">        title hello Jade</div><div class="line">    body</div><div class="line">    h2 hello Jade!</div></pre></td></tr></table></figure>
+</li>
+<li><p>cd到目录下，编译运行<br><code>Jade demo.Jade</code><br>显示编译完成，回到目录下，会发现多了个demo.html文件，查看源代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>hello Jade<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">h2</span>&gt;</span>hello Jade!<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>上面这种方式，每次修改都要重新编译，太麻烦。使用<br><code>Jade -P -w demo.Jade</code><br>会自动给每一次的修改编译，修改完只需要保存一下，然后就可以去页面上预览</p>
+</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://cnodejs.org/topic/5368adc5cf738dd6090060f2" target="_blank" rel="external">基本语法</a></li>
+<li><a href="http://Jade-lang.com/" target="_blank" rel="external">官网</a></li>
+</ul>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[盒子模型]]></title>
+      <url>http://yoursite.com/2016/07/14/%E7%9B%92%E5%AD%90%E6%A8%A1%E5%9E%8B/</url>
+      <content type="html"><![CDATA[<h2 id="盒子模型"><a href="#盒子模型" class="headerlink" title="盒子模型"></a>盒子模型</h2><h3 id="四个部分组成"><a href="#四个部分组成" class="headerlink" title="四个部分组成"></a>四个部分组成</h3><ul>
+<li>自身元素的内容 </li>
+<li>内边距（padding） </li>
+<li>边框线（border） </li>
+<li>外边距（margin）</li>
+</ul>
+<h3 id="主要是两个属性"><a href="#主要是两个属性" class="headerlink" title="主要是两个属性"></a>主要是两个属性</h3><ul>
+<li>content-box </li>
+<li>border-box（基本上所有的框架都用这个来布局）<h3 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h3></li>
+<li>contnt-box实际的宽高并不是在样式里设置的大小，还会包括其他的三个部分的大小，会被<strong>撑开</strong></li>
+<li>border-box，设置的大小是整个的大小，不仅仅是内部自身元素的大小，忽略掉边框线和内边距的宽度<br><em>border-box更好控制？？</em></li>
+</ul>
+<hr>
+<p>现在的用法<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">*box-sizing:border-box；再加点兼容的代码</div></pre></td></tr></table></figure></p>
+<p>before和after，占位符的作用，伪类<br>此处要放通配符定义的代码<br>除了ie6和7，其他的基本上都是兼容的，所以可以放心使用</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Hello World]]></title>
+      <url>http://yoursite.com/2016/07/11/hello-world/</url>
+      <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+]]></content>
+    </entry>
+    
+  
+  
+</search>

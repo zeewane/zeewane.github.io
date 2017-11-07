@@ -1,0 +1,865 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="springmvc," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="zeewane" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="注解什么是注解？
+起步12&amp;lt;!-- 注解驱动的方式，不用再去写映射器和适配器，也自动导入了json的转换器 --&amp;gt;&amp;lt;mvc:annotation-driven validator=&quot;validator&quot; /&amp;gt;
+注解整理Controller声明这是一个controller，配置了组件扫描之后会自动去找有这个注解的类。
+在springmvc的配置文件中加入组件扫描。12&amp;lt;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="springmvc注解整理">
+<meta property="og:url" content="http://yoursite.com/2016/10/08/springmvc注解整理/index.html">
+<meta property="og:site_name" content="zeewane">
+<meta property="og:description" content="注解什么是注解？
+起步12&amp;lt;!-- 注解驱动的方式，不用再去写映射器和适配器，也自动导入了json的转换器 --&amp;gt;&amp;lt;mvc:annotation-driven validator=&quot;validator&quot; /&amp;gt;
+注解整理Controller声明这是一个controller，配置了组件扫描之后会自动去找有这个注解的类。
+在springmvc的配置文件中加入组件扫描。12&amp;lt;">
+<meta property="og:updated_time" content="2016-10-08T02:25:17.590Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="springmvc注解整理">
+<meta name="twitter:description" content="注解什么是注解？
+起步12&amp;lt;!-- 注解驱动的方式，不用再去写映射器和适配器，也自动导入了json的转换器 --&amp;gt;&amp;lt;mvc:annotation-driven validator=&quot;validator&quot; /&amp;gt;
+注解整理Controller声明这是一个controller，配置了组件扫描之后会自动去找有这个注解的类。
+在springmvc的配置文件中加入组件扫描。12&amp;lt;">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/10/08/springmvc注解整理/"/>
+
+  <title> springmvc注解整理 | zeewane </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">zeewane</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                springmvc注解整理
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-08T10:23:55+08:00" content="2016-10-08">
+              2016-10-08
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/框架/" itemprop="url" rel="index">
+                    <span itemprop="name">框架</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/10/08/springmvc注解整理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/08/springmvc注解整理/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h2><p>什么是注解？</p>
+<h3 id="起步"><a href="#起步" class="headerlink" title="起步"></a>起步</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- 注解驱动的方式，不用再去写映射器和适配器，也自动导入了json的转换器 --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">mvc:annotation-driven</span> <span class="attr">validator</span>=<span class="string">"validator"</span> /&gt;</span></div></pre></td></tr></table></figure>
+<h2 id="注解整理"><a href="#注解整理" class="headerlink" title="注解整理"></a>注解整理</h2><h3 id="Controller"><a href="#Controller" class="headerlink" title="Controller"></a>Controller</h3><p>声明这是一个controller，配置了组件扫描之后会自动去找有这个注解的类。</p>
+<p>在springmvc的配置文件中加入组件扫描。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- 组件扫描 --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">context:component-scan</span> <span class="attr">base-package</span>=<span class="string">"com.hundsun.ssm.controller"</span> /&gt;</span></div></pre></td></tr></table></figure></p>
+<h3 id="RequestMapping"><a href="#RequestMapping" class="headerlink" title="RequestMapping"></a>RequestMapping</h3><p>一个url路径。同时里面也可以有参数，可以去限制请求方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 只能通过post方法来请求</span></div><div class="line"><span class="meta">@RequestMapping</span>(value=<span class="string">"items"</span>,method=&#123;RequestMethod.POST&#125;)</div></pre></td></tr></table></figure>
+<h3 id="Autowired"><a href="#Autowired" class="headerlink" title="Autowired"></a>Autowired</h3><p>自动装配，有了这个就不用去给每次的注入添加set方法。</p>
+<h3 id="RequestBody"><a href="#RequestBody" class="headerlink" title="RequestBody"></a>RequestBody</h3><p>请求的格式为json格式。</p>
+<h4 id="ajax请求"><a href="#ajax请求" class="headerlink" title="ajax请求"></a>ajax请求</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//请求json，输出是json</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">requestJson</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	</div><div class="line">  $.ajax(&#123;</div><div class="line">    type:<span class="string">'post'</span>,</div><div class="line">    url:<span class="string">'$&#123;pageContext.request.contextPath&#125;/requestJson.action'</span>,</div><div class="line">    contentType:<span class="string">'application/json;charset=utf-8'</span>,</div><div class="line">    <span class="comment">//数据格式是json串，商品信息</span></div><div class="line">    data:<span class="string">'&#123;"name":"手机","price":999&#125;'</span>,</div><div class="line">    success:<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;<span class="comment">//返回json结果</span></div><div class="line">        alert(data);</div><div class="line">    &#125;</div><div class="line">  &#125;);</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="controller接收处理请求"><a href="#controller接收处理请求" class="headerlink" title="controller接收处理请求"></a>controller接收处理请求</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/requestJson"</span>)</div><div class="line"><span class="keyword">public</span> <span class="meta">@ResponseBody</span> <span class="function">ItemsCustom <span class="title">requestJson</span><span class="params">(@RequestBody ItemsCustom itemsCustom)</span></span>&#123;</div><div class="line">    <span class="comment">// do something...</span></div><div class="line">    </div><div class="line">    <span class="keyword">return</span> itemsCustom;	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="ResponseBody"><a href="#ResponseBody" class="headerlink" title="ResponseBody"></a>ResponseBody</h3><p>响应的格式为json格式。</p>
+<h4 id="ajax请求-1"><a href="#ajax请求-1" class="headerlink" title="ajax请求"></a>ajax请求</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//请求key/value，输出是json</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">responseJson</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	</div><div class="line">  $.ajax(&#123;</div><div class="line">    type:<span class="string">'post'</span>,</div><div class="line">    url:<span class="string">'$&#123;pageContext.request.contextPath&#125;/responseJson.action'</span>,</div><div class="line">    <span class="comment">//请求是key/value这里不需要指定contentType，因为默认就 是key/value类型</span></div><div class="line">    <span class="comment">//contentType:'application/json;charset=utf-8',</span></div><div class="line">    <span class="comment">//数据格式是json串，商品信息</span></div><div class="line">    data:<span class="string">'name=手机&amp;price=999'</span>,</div><div class="line">    success:<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;<span class="comment">//返回json结果</span></div><div class="line">        alert(data.name);</div><div class="line">    &#125;</div><div class="line">  &#125;);</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="controller接收处理"><a href="#controller接收处理" class="headerlink" title="controller接收处理"></a>controller接收处理</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 返回的是json，输入的是key/value格式</span></div><div class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/responseJson"</span>)</div><div class="line"><span class="keyword">public</span> <span class="meta">@ResponseBody</span> <span class="function">ItemsCustom <span class="title">responseJson</span><span class="params">(ItemsCustom itemsCustom)</span></span>&#123;</div><div class="line">    <span class="comment">// do something...</span></div><div class="line">    <span class="keyword">return</span> itemsCustom;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="ModelAttribute"><a href="#ModelAttribute" class="headerlink" title="ModelAttribute"></a>ModelAttribute</h3><h3 id="Validated"><a href="#Validated" class="headerlink" title="Validated"></a>Validated</h3><p>分组的时候用。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/springmvc/" rel="tag">#springmvc</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/21/fastjson试用/" rel="next" title="fastjson试用">
+                <i class="fa fa-chevron-left"></i> fastjson试用
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/13/权限控制模型/" rel="prev" title="权限控制模型">
+                权限控制模型 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/10/08/springmvc注解整理/"
+     data-title="springmvc注解整理"
+     data-content=""
+     data-url="http://yoursite.com/2016/10/08/springmvc注解整理/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/10/08/springmvc注解整理/"
+           data-title="springmvc注解整理" data-url="http://yoursite.com/2016/10/08/springmvc注解整理/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="戚志伟" />
+          <p class="site-author-name" itemprop="name">戚志伟</p>
+          <p class="site-description motion-element" itemprop="description">To be a better man.</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">29</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/zeewane" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-bus"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://weibo.com/zeewane" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zeewane" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#注解"><span class="nav-number">1.</span> <span class="nav-text">注解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#起步"><span class="nav-number">1.1.</span> <span class="nav-text">起步</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注解整理"><span class="nav-number">2.</span> <span class="nav-text">注解整理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Controller"><span class="nav-number">2.1.</span> <span class="nav-text">Controller</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RequestMapping"><span class="nav-number">2.2.</span> <span class="nav-text">RequestMapping</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Autowired"><span class="nav-number">2.3.</span> <span class="nav-text">Autowired</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RequestBody"><span class="nav-number">2.4.</span> <span class="nav-text">RequestBody</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ajax请求"><span class="nav-number">2.4.1.</span> <span class="nav-text">ajax请求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#controller接收处理请求"><span class="nav-number">2.4.2.</span> <span class="nav-text">controller接收处理请求</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ResponseBody"><span class="nav-number">2.5.</span> <span class="nav-text">ResponseBody</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ajax请求-1"><span class="nav-number">2.5.1.</span> <span class="nav-text">ajax请求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#controller接收处理"><span class="nav-number">2.5.2.</span> <span class="nav-text">controller接收处理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ModelAttribute"><span class="nav-number">2.6.</span> <span class="nav-text">ModelAttribute</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Validated"><span class="nav-number">2.7.</span> <span class="nav-text">Validated</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">戚志伟</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zeewane"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

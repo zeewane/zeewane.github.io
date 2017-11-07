@@ -1,0 +1,1004 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="shiro," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="zeewane" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="最原始的权限模型（Role Based Access Control）用户-角色-权限，三者分别都是多对多的关系，所以抽出来两张表，关系结构为：
+
+用户表
+用户-角色对应表
+角色表
+角色-权限对应表
+权限表
+
+哪里不好这个模型能够适应基本的权限控制情况，但是组织结构一旦复杂，这个就不够用了。
+情况：一些权限控制不应该到业务层去实现，也不可能一直去添加角色，同样是项目经理，对应的是不同的项目，对于资">
+<meta property="og:type" content="article">
+<meta property="og:title" content="权限控制模型">
+<meta property="og:url" content="http://yoursite.com/2016/10/13/权限控制模型/index.html">
+<meta property="og:site_name" content="zeewane">
+<meta property="og:description" content="最原始的权限模型（Role Based Access Control）用户-角色-权限，三者分别都是多对多的关系，所以抽出来两张表，关系结构为：
+
+用户表
+用户-角色对应表
+角色表
+角色-权限对应表
+权限表
+
+哪里不好这个模型能够适应基本的权限控制情况，但是组织结构一旦复杂，这个就不够用了。
+情况：一些权限控制不应该到业务层去实现，也不可能一直去添加角色，同样是项目经理，对应的是不同的项目，对于资">
+<meta property="og:image" content="http://images.cnitblog.com/blog/453361/201406/171745032391082.png">
+<meta property="og:image" content="http://images.cnitblog.com/blog/453361/201406/180839130203826.png">
+<meta property="og:image" content="http://images.cnitblog.com/blog/453361/201406/180839146928369.png">
+<meta property="og:image" content="http://images.cnitblog.com/blog/453361/201406/180839166929713.png">
+<meta property="og:updated_time" content="2016-10-13T08:59:44.664Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="权限控制模型">
+<meta name="twitter:description" content="最原始的权限模型（Role Based Access Control）用户-角色-权限，三者分别都是多对多的关系，所以抽出来两张表，关系结构为：
+
+用户表
+用户-角色对应表
+角色表
+角色-权限对应表
+权限表
+
+哪里不好这个模型能够适应基本的权限控制情况，但是组织结构一旦复杂，这个就不够用了。
+情况：一些权限控制不应该到业务层去实现，也不可能一直去添加角色，同样是项目经理，对应的是不同的项目，对于资">
+<meta name="twitter:image" content="http://images.cnitblog.com/blog/453361/201406/171745032391082.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/10/13/权限控制模型/"/>
+
+  <title> 权限控制模型 | zeewane </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">zeewane</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                权限控制模型
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-13T08:24:13+08:00" content="2016-10-13">
+              2016-10-13
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/框架/" itemprop="url" rel="index">
+                    <span itemprop="name">框架</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/10/13/权限控制模型/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/13/权限控制模型/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="最原始的权限模型（Role-Based-Access-Control）"><a href="#最原始的权限模型（Role-Based-Access-Control）" class="headerlink" title="最原始的权限模型（Role Based Access Control）"></a>最原始的权限模型（Role Based Access Control）</h2><p>用户-角色-权限，三者分别都是多对多的关系，所以抽出来两张表，关系结构为：</p>
+<ul>
+<li>用户表</li>
+<li>用户-角色对应表</li>
+<li>角色表</li>
+<li>角色-权限对应表</li>
+<li>权限表<br><img src="http://images.cnitblog.com/blog/453361/201406/171745032391082.png" alt="image"></li>
+</ul>
+<h3 id="哪里不好"><a href="#哪里不好" class="headerlink" title="哪里不好"></a>哪里不好</h3><p>这个模型能够适应基本的权限控制情况，但是组织结构一旦复杂，这个就不够用了。</p>
+<p>情况：一些权限控制不应该到业务层去实现，也不可能一直去添加角色，同样是项目经理，对应的是不同的项目，对于资源的划分就变的很麻烦了，每个资源都要去划分。而且按钮和菜单应该怎么去做。等用户量大的时候，一个一个的赋予角色就麻烦了，而且这个角色也会有很多个，不利于管理和维护，角色如何去分层次。</p>
+<p>如何做到字段级别的权限控制？</p>
+<h2 id="改进版本1"><a href="#改进版本1" class="headerlink" title="改进版本1"></a>改进版本1</h2><p>加入组织表。</p>
+<p>这个版本主要是解决组织之间的角色关系，以及方便对整个用户组里的用户赋权。</p>
+<p>用户组织也是有权限的，把用户分组，因为一些权限是直接根据组来的，组织也有角色，也对应着权限，这样直接赋权限的时候就会方便点，加入这个组织就可以了。</p>
+<p>个人的权限 = 自己拥有的角色的权限 + 组织角色拥有的权限</p>
+<p><img src="http://images.cnitblog.com/blog/453361/201406/180839130203826.png" alt="image"></p>
+<h3 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h3><ul>
+<li>组织也分上下级的关系，因为是树形结构，那么是不是涉及到权限的继承？</li>
+<li>不对，组织到底是个怎么样的概念，是协同上的那种树形结构，</li>
+</ul>
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><ul>
+<li>用户组织，如技术研发部、平台研发部，这些都是平行的组织，对应着自己组织的权限，可是这样和直接赋给这个人，xx成员的角色有什么区别？</li>
+<li>区别在于，用户组织，其实是一个很多角色的组合，里面包含着很多角色和权限，避免去一次一次的重复给组内的需要的角色</li>
+<li>但是假如这种情况，一个组内，也是有不同的等级的，比如项目组长、普通员工和实习生，这三者的权限又是不一样的。这个好像又回到之前那个模型的问题了</li>
+<li>组织只能适用于一些宽泛的场景，比如大家都是研发中心的员工，这个自然是和客服中心区分开来了；</li>
+<li>这个组织存在的意义是什么？就是一个大的角色而已，不对不是一个角色，这个组织可以有多个角色</li>
+<li><del>角色挂在组织下，组织就是角色组，角色组也可以不参与角色分配，只是为了看起来能够更加清晰？？对，可以这样做</del></li>
+</ul>
+<h3 id="角色和用户组有什么区别"><a href="#角色和用户组有什么区别" class="headerlink" title="角色和用户组有什么区别"></a>角色和用户组有什么区别</h3><ul>
+<li>角色是一组权限的集合</li>
+<li>用户组是一组角色的集合？<del>也不一定，也可以作为一个大的角色赋给全部人，方便统一处理</del>，用户组就是一组用户的集合，这一群用户是一个组织，给组织赋权就是给组织内的全部用户赋权</li>
+<li><del>角色组的出现，一是为了让组织结构看起来更加清晰，二是方便统一的对某个组织进行权限的控制</del>，不对，角色组和用户组是两个概念！！</li>
+<li>用户组在一些时候，其实就是一个大的角色</li>
+<li></li>
+</ul>
+<h2 id="改进版本2"><a href="#改进版本2" class="headerlink" title="改进版本2"></a>改进版本2</h2><p>改进权限表，把菜单、页面元素等东西列出来。</p>
+<p><img src="http://images.cnitblog.com/blog/453361/201406/180839146928369.png" alt="image"></p>
+<p>要解决的问题是，资源和权限操作并不好区分。</p>
+<p>要控制的资源，主要有：菜单，页面上的各种元素如按钮，文件，以及还有一个就是url访问的页面需要进行控制</p>
+<ul>
+<li>不同用户拥有的菜单不同</li>
+<li>可以看到的页面元素也不同</li>
+<li>可以访问的文件也不同</li>
+<li>可以直接访问的页面也不同，一些页面需要有特定的权限才可以访问</li>
+</ul>
+<p>前三者基本上就一个查的权限，最后一个涉及的较多，可以用url来进行区分和控制</p>
+<p>权限表给一个类型，来判断这个权限id对应的是哪个类型的资源</p>
+<p>这样是不是就解决了菜单控制的问题？</p>
+<p>这样设计会更加便于拓展，有什么新的资源或者其他的东西需要进行权限控制，只要再添加一张关联表和资源表就行</p>
+<p>页面元素怎么放里面？给编码，每个元素都有一个编码，使用一定的命名形式</p>
+<p>查出来的权限有哪些？其实就角色和权限id，全部的id都放在authorizationInfo中，info是个集合，渲染页面的时候会去遍历这个集合，如果有就渲染出来，但是页面元素这种资源不能太多，某些关键的按钮和表单，用jsp的hasPermission标签的形式就可以做到</p>
+<p>完整数据库设计：<br><img src="http://images.cnitblog.com/blog/453361/201406/180839166929713.png" alt="image"></p>
+<h3 id="角色组"><a href="#角色组" class="headerlink" title="角色组"></a>角色组</h3><p>角色组不给权限，只是作为一个分上下级的东西，或者其他的结构？这个不参与权限的分配，所以这个才是最重要的，用户组只是为了方便操作，这个才是直观的部门分层</p>
+<p>使用场景：</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h3 id="添加了一个用户组的概念"><a href="#添加了一个用户组的概念" class="headerlink" title="添加了一个用户组的概念"></a>添加了一个用户组的概念</h3><p>用户组就是一组用户的集合，当给用户组赋予角色的时候，整个组内的成员都会获得这个角色以及它的权限。这样就方便了加减角色的操作，当用户量足够大的时候，就不用去挨个赋权。</p>
+<p>好像很鸡肋，又回到了一开始，用户组就是一个大角色的概念，没什么存在的意义。除了一次性的给多个用户赋角色。</p>
+<p>所以用户的权限 = 用户组的权限 + 用户自身有的角色权限</p>
+<h3 id="把权限表细化"><a href="#把权限表细化" class="headerlink" title="把权限表细化"></a>把权限表细化</h3><p>权限分很多种，操作也是一种权限，不仅仅是那些静态的资源才有权限。所以在权限表中加入一个type字段，表明这个是什么类型的权限，是menu的还是file的，或者是control的，然后每个对应的type都单独拿出去作为一张表，这样就可以把操作和静态资源看做是一个东西来进行管理。</p>
+<h3 id="加入角色组的概念"><a href="#加入角色组的概念" class="headerlink" title="加入角色组的概念"></a>加入角色组的概念</h3><p>角色组是不参与权限的分配的，只是拿来进行组织结构的划分，划分的结构可以是树形结构。</p>
+<h3 id="声明"><a href="#声明" class="headerlink" title="声明"></a>声明</h3><ul>
+<li>一个用户只能属于一个用户组</li>
+<li>用户组有继承机制，但是只能有一个父用户组</li>
+<li>一个用户组可以有多个角色和权限</li>
+<li>权限是不能直接赋给用户的，需要去创建一个角色，把权限赋给角色，然后角色赋给用户，这样的方式去进行授权操作</li>
+<li>用户的权限信息，包括permission和role这两种</li>
+<li>（应该加入一个权限互斥组）！不然一些情况没办法实现</li>
+</ul>
+<h2 id="使用场景模拟"><a href="#使用场景模拟" class="headerlink" title="使用场景模拟"></a>使用场景模拟</h2><h3 id="场景一"><a href="#场景一" class="headerlink" title="场景一"></a>场景一</h3><ul>
+<li>大家都是研发中心的员工，和客服中心的员工的基础权限是不一样的，比如研发中心的可以访问需求网站并且下载文档，客服中心的可以访问客户沟通网站</li>
+</ul>
+<p>答：划分好权限后，把权限赋给角色，分别是需求网站访问者、文档下载者和客户沟通网站访问者。研发中心和客服中心就是两个不同的用户组，这三个角色赋给用户组后，组内的全部用户就都有了这个角色，都有了对应的权限。</p>
+<h3 id="场景二"><a href="#场景二" class="headerlink" title="场景二"></a>场景二</h3><ul>
+<li>研发中心的全部用户对这个页面有读的权限，里面的主管用户对这个页面有读和写的权限  </li>
+</ul>
+<p>答：直接在权限type为功能操作那边进行拦截，写是一个角色A，读是一个角色B，对应着相应的权限，角色A赋给研发中心用户组，角色B赋给主管，这样就完成了这个场景</p>
+<h3 id="场景三"><a href="#场景三" class="headerlink" title="场景三"></a>场景三</h3><ul>
+<li>用户都有访问这个页面的权限，但是不同的用户看到的菜单和页面元素不同</li>
+</ul>
+<p>答：首先菜单和页面元素全部被划分成资源，放到权限表外联的表中，在用户登录进行授权的时候，这些对应的权限id就全部被写入到用户的权限信息中，渲染页面的时候就会去遍历用户的权限信息，有哪些就显示哪些。</p>
+<h3 id="场景四"><a href="#场景四" class="headerlink" title="场景四"></a>场景四</h3><ul>
+<li>总经理临时需要加一个权限</li>
+</ul>
+<p>答：那就去新建一个角色，把这个权限赋给这个角色，然后把角色添加给总经理用户，这样就完成了授权。</p>
+<h3 id="场景五"><a href="#场景五" class="headerlink" title="场景五"></a>场景五</h3><ul>
+<li>用户个人角色的权限和用户组权限冲突，比如实习生也算是挂在研发中心下面的，但是权限和正式员工不同，协同上一些信息是没有访问权限的，这个如何处理</li>
+</ul>
+<p>答：这个模型不应该出现权限冲突的情况，有就是有，没有就是没有。如果用户组有，个人角色没有，那就是有；如果用户组没有，个人角色有，那还是有。如果个人不应该有组织的某个角色，那就直接不能加入这个组织，因为组织的基础角色和他不符。所以用户组的权限需要是最基础的通用的权限。</p>
+<p><strong>需要加入一个约束机制，冲突的角色应该只能添加一个。</strong></p>
+<h3 id="场景六"><a href="#场景六" class="headerlink" title="场景六"></a>场景六</h3><ul>
+<li>用户组如何去分级和继承权限</li>
+</ul>
+<p>答：整个研发中心有研发中心的权限A，客服中心有权限B，研发中心下面的技术研发部的权限为a，平台研发部的权限为b，客服中心下面的维护中心的权限为c，那么技术研发部的用户的权限 = A + a + 自己本身；同理。</p>
+<h3 id="场景七"><a href="#场景七" class="headerlink" title="场景七"></a>场景七</h3><ul>
+<li>每个人只能查看自己的工资信息，这个应该如何实现？</li>
+</ul>
+<p>答：应该在业务层实现，查工资这个权限应该在小组中就定义好【查工资者】这一个角色，然后在执行查工资的操作的时候，传入id，返回个人的工资信息并显示。</p>
+<h3 id="场景八"><a href="#场景八" class="headerlink" title="场景八"></a>场景八</h3><ul>
+<li>要取消组内的某个人的权限，这个权限来自于用户组，如何操作</li>
+</ul>
+<p>答：直接把这个人移出组？感觉不对，难道要为了他去特地创建一个角色，可是只能这么做，把这个角色从他身上取掉，退出这个用户组，然后给他一个阉割过的角色。</p>
+<h3 id="场景九"><a href="#场景九" class="headerlink" title="场景九"></a>场景九</h3><ul>
+<li>父用户组有的功能，但是下面的子用户组需要禁止这个权限，如何操作？</li>
+</ul>
+<p>答：参考场景五。分组的时候就需要考虑到这个问题，那样的话这个模型是不是就有问题了。</p>
+<p>网上的回答是：1、加入互斥角色；2、有一个基数约束（领导的数量是有限的）；3、有先决条件角色（你想当技术专家，你首先必须是高级工程师，需要获得低一级的角色权限）；4、运行时互斥。</p>
+<p>好像已经背离了基于资源的权限控制，现在就是基于角色的，所以问题很大。但是角色其实就是资源权限的一个封装啊，就是一个权限的集合，只是为了更加符合人类思考的常理，不可能去后面拖着一堆权限，最后组装成permission的时候，其实也是根据角色去查询具体的权限的啊，这个是系统框架层次需要去思考的问题，现在只是一个数据库设计而已，依旧可以通过user-role-permission三表来查询到user的permission。</p>
+<p>现在的问题在于如何去取消权限</p>
+<h2 id="问石磊"><a href="#问石磊" class="headerlink" title="问石磊"></a>问石磊</h2><p>模型更改，加入部门的概念，不能用用户组来模拟部门，部门不应该有权限，只是一个逻辑上的分区</p>
+<h3 id="新模型要点"><a href="#新模型要点" class="headerlink" title="新模型要点"></a>新模型要点</h3><ul>
+<li><del>用户组可以继承，继承的是父类的角色</del></li>
+<li>用户组和角色之间的关系是：用户组只能有一个角色，角色可以赋给多个用户组</li>
+<li>用户可以单独赋予权限</li>
+<li>一个用户可以加入多个用户组</li>
+<li>取消权限是一个灾难，一旦涉及到取消，就要把用户移出当前用户组，其实可以解决啊！！要做的操作比较少的</li>
+<li>是否存在权限冲突的情况（不是很想的到场景）</li>
+<li>关键在于用户组的分类，之前想的是把用户组作为有相同角色的全部用户的集合，想一起方便的赋权，但是这样就违背了组织本来的概念。现在把用户组通过部门来进行管理，部门不涉及权限。</li>
+<li>但是如果用户组下面还有用户组的话，是不是就会有问题。用户组的表应该怎么设计，部门的表又应该怎么设计？是不是应该去取消用户组的继承，部门的东西全部在部门的逻辑分组中完成，<del>一个用户组只能属于一个部门</del>，用户组下面只有用户。但是这样设计的话，就没有一级一级继承下来的意思了，或者说本来就不应该有这个想法，继承不应该是在这边继承，换个角度去思考，因为一个用户可以加入多个用户组，所以用户可以继承到多个角色，虽然没有一级级的角色继承，你是研发中心的员工，所以有研发中心的员工的基础权限，你是研发中心的技术研发部的员工，所以有技术研发部的权限 + 研发中心的基础权限，这样就是一种继承。如果换成现在这种模型，就是部门下面会有部门和用户组，你又是研发中心的普通员工，也是技术研发部的普通员工，所以你有这两个用户组的角色，<strong>所以用户会和用户组有一个多对多的对应表</strong>。</li>
+<li>首先，<strong>没有人是可以游离于组织之外的</strong>，每个人都至少属于一个组织，实习生属于实习生的组织 + 实习生所在的部门的组织，用户组的概念要更正，用户组首先是一个用户的集合，其次他本身拥有一个角色，有等级的角色，如，基础角色A，中级角色B，高级角色C，终极角色D，首先全部人都有基础角色A，正式员工会加一个B角色，高级员工再加个C，以此类推。</li>
+<li>要明确，这个是数据库设计，不是框架层次的设计，一些业务上的东西应该交给框架或者是业务代码去实现。</li>
+<li>为什么不能给用户组赋予多个角色？没必要</li>
+</ul>
+<h3 id="常用场景模拟"><a href="#常用场景模拟" class="headerlink" title="常用场景模拟"></a>常用场景模拟</h3><ul>
+<li>实习生转正了</li>
+</ul>
+<p>答：给他加入到中级用户组即可。</p>
+<ul>
+<li>换了一个组织，从技术研发部到了公共支持部 </li>
+</ul>
+<p>答：直接把用户的用户组更改一下，放到另外一个部门下的用户组里就行</p>
+<p>- </p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/shiro/" rel="tag">#shiro</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/08/springmvc注解整理/" rel="next" title="springmvc注解整理">
+                <i class="fa fa-chevron-left"></i> springmvc注解整理
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/01/2016总结/" rel="prev" title="2016总结">
+                2016总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/10/13/权限控制模型/"
+     data-title="权限控制模型"
+     data-content=""
+     data-url="http://yoursite.com/2016/10/13/权限控制模型/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/10/13/权限控制模型/"
+           data-title="权限控制模型" data-url="http://yoursite.com/2016/10/13/权限控制模型/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="戚志伟" />
+          <p class="site-author-name" itemprop="name">戚志伟</p>
+          <p class="site-description motion-element" itemprop="description">To be a better man.</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">29</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/zeewane" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-bus"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://weibo.com/zeewane" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zeewane" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#最原始的权限模型（Role-Based-Access-Control）"><span class="nav-number">1.</span> <span class="nav-text">最原始的权限模型（Role Based Access Control）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#哪里不好"><span class="nav-number">1.1.</span> <span class="nav-text">哪里不好</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#改进版本1"><span class="nav-number">2.</span> <span class="nav-text">改进版本1</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#疑问"><span class="nav-number">2.1.</span> <span class="nav-text">疑问</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#应用场景"><span class="nav-number">2.2.</span> <span class="nav-text">应用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#角色和用户组有什么区别"><span class="nav-number">2.3.</span> <span class="nav-text">角色和用户组有什么区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#改进版本2"><span class="nav-number">3.</span> <span class="nav-text">改进版本2</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#角色组"><span class="nav-number">3.1.</span> <span class="nav-text">角色组</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#添加了一个用户组的概念"><span class="nav-number">4.1.</span> <span class="nav-text">添加了一个用户组的概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#把权限表细化"><span class="nav-number">4.2.</span> <span class="nav-text">把权限表细化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#加入角色组的概念"><span class="nav-number">4.3.</span> <span class="nav-text">加入角色组的概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#声明"><span class="nav-number">4.4.</span> <span class="nav-text">声明</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用场景模拟"><span class="nav-number">5.</span> <span class="nav-text">使用场景模拟</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#场景一"><span class="nav-number">5.1.</span> <span class="nav-text">场景一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#场景二"><span class="nav-number">5.2.</span> <span class="nav-text">场景二</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#场景三"><span class="nav-number">5.3.</span> <span class="nav-text">场景三</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#场景四"><span class="nav-number">5.4.</span> <span class="nav-text">场景四</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#场景五"><span class="nav-number">5.5.</span> <span class="nav-text">场景五</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#场景六"><span class="nav-number">5.6.</span> <span class="nav-text">场景六</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#场景七"><span class="nav-number">5.7.</span> <span class="nav-text">场景七</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#场景八"><span class="nav-number">5.8.</span> <span class="nav-text">场景八</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#场景九"><span class="nav-number">5.9.</span> <span class="nav-text">场景九</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问石磊"><span class="nav-number">6.</span> <span class="nav-text">问石磊</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#新模型要点"><span class="nav-number">6.1.</span> <span class="nav-text">新模型要点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常用场景模拟"><span class="nav-number">6.2.</span> <span class="nav-text">常用场景模拟</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">戚志伟</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zeewane"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

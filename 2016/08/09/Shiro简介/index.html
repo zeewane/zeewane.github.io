@@ -1,0 +1,916 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="shiro," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="zeewane" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="什么是shiroApache Shiro一个功能强大，使用简单的Java安全框架，它为开发人员提供一个直观而全面的认证，授权，加密及会话管理的解决方案。  
+功能实际上，Shiro的主要功能是管理应用程序中与安全相关的全部，同时尽可能支持多种实现方法。Shiro是建立在完善的接口驱动设计和面向对象原则之上的，支持各种自定义行为。Shiro提供的默认实现，使其能完成与其他安全框架同样的功能。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="shiro系列3-Shiro简介">
+<meta property="og:url" content="http://yoursite.com/2016/08/09/Shiro简介/index.html">
+<meta property="og:site_name" content="zeewane">
+<meta property="og:description" content="什么是shiroApache Shiro一个功能强大，使用简单的Java安全框架，它为开发人员提供一个直观而全面的认证，授权，加密及会话管理的解决方案。  
+功能实际上，Shiro的主要功能是管理应用程序中与安全相关的全部，同时尽可能支持多种实现方法。Shiro是建立在完善的接口驱动设计和面向对象原则之上的，支持各种自定义行为。Shiro提供的默认实现，使其能完成与其他安全框架同样的功能。">
+<meta property="og:image" content="https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1471217447&di=8346196df047c4d1393d513ab0c02d7b&src=http://static.oschina.net/uploads/space/2014/0210/104057_NHqv_1417419.png">
+<meta property="og:updated_time" content="2016-08-15T03:07:27.091Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="shiro系列3-Shiro简介">
+<meta name="twitter:description" content="什么是shiroApache Shiro一个功能强大，使用简单的Java安全框架，它为开发人员提供一个直观而全面的认证，授权，加密及会话管理的解决方案。  
+功能实际上，Shiro的主要功能是管理应用程序中与安全相关的全部，同时尽可能支持多种实现方法。Shiro是建立在完善的接口驱动设计和面向对象原则之上的，支持各种自定义行为。Shiro提供的默认实现，使其能完成与其他安全框架同样的功能。">
+<meta name="twitter:image" content="https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1471217447&di=8346196df047c4d1393d513ab0c02d7b&src=http://static.oschina.net/uploads/space/2014/0210/104057_NHqv_1417419.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/08/09/Shiro简介/"/>
+
+  <title> shiro系列3-Shiro简介 | zeewane </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">zeewane</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                shiro系列3-Shiro简介
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-09T10:17:48+08:00" content="2016-08-09">
+              2016-08-09
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/框架/" itemprop="url" rel="index">
+                    <span itemprop="name">框架</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/09/Shiro简介/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/09/Shiro简介/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="什么是shiro"><a href="#什么是shiro" class="headerlink" title="什么是shiro"></a>什么是shiro</h2><p>Apache Shiro一个功能强大，使用简单的Java安全框架，它为开发人员提供一个直观而全面的认证，授权，加密及会话管理的解决方案。  </p>
+<h3 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h3><p>实际上，Shiro的主要功能是管理应用程序中与安全相关的全部，同时尽可能支持多种实现方法。Shiro是建立在完善的接口驱动设计和面向对象原则之上的，支持各种自定义行为。Shiro提供的默认实现，使其能完成与其他安全框架同样的功能。   </p>
+<p>功能点描述：</p>
+<ol>
+<li>身份认证/登录，验证用户是不是拥有相应的身份；</li>
+<li>授权，即权限验证，验证某个已认证的用户是否拥有某个权限；即判断用户是否能做事情，常见的如：验证某个用户是否拥有某个角色。或者细粒度的验证某个用户对某个资源是否具有某个权限；</li>
+<li>会话管理，即用户登录后就是一次会话，在没有退出之前，它的所有信息都在会话中；会话可以是普通JavaSE环境的，也可以是如Web环境的；</li>
+<li>加密，保护数据的安全性，如密码加密存储到数据库，而不是明文存储；</li>
+<li>Web支持，可以非常容易的集成到Web环境；<br>Caching：缓存，比如用户登录后，其用户信息、拥有的角色/权限不必每次去查，这样可以提高效率；</li>
+<li>shiro支持多线程应用的并发验证，即如在一个线程中开启另一个线程，能把权限自动传播过去；</li>
+<li>提供测试支持；</li>
+<li>允许一个用户假装为另一个用户（如果他们允许）的身份进行访问；</li>
+<li>记住我，这个是非常常见的功能，即一次登录后，下次再来的话不用登录了。</li>
+</ol>
+<blockquote>
+<p><a href="http://shiro.apache.org/reference.html" target="_blank" rel="external">官网使用手册</a></p>
+</blockquote>
+<h3 id="发展历程"><a href="#发展历程" class="headerlink" title="发展历程"></a>发展历程</h3><p>Shiro最早的名字是JSecurity，后来更名为Shiro并成为Apache的孵化项目。现在的版本到了1.3.0</p>
+<h3 id="Spring-Security"><a href="#Spring-Security" class="headerlink" title="Spring Security"></a>Spring Security</h3><p>Spring Security是一个能够为基于Spring的企业应用系统提供声明式的安全访问控制解决方案的安全框架。它提供了一组可以在Spring应用上下文中配置的Bean，充分利用了Spring IoC，DI（控制反转Inversion of Control ,DI: Dependency Injection 依赖注入）和AOP（面向切面编程）功能，为应用系统提供声明式的安全访问控制功能，减少了为企业系统安全控制编写大量重复代码的工作。</p>
+<p>对比：</p>
+<ol>
+<li>Shiro is much easier to use , implement and most importantly understand than Spring</li>
+<li>The only reason Spring Security is much more well-known is because of the brand name “Spring” which is famous for simplicity , but ironically many find installing Spring Security little difficult</li>
+<li>Spring Security , however has a better community support</li>
+<li>Apache Shiro has an additional module over Spring Security of handling Cryptography</li>
+</ol>
+<h3 id="shiro的优势"><a href="#shiro的优势" class="headerlink" title="shiro的优势"></a>shiro的优势</h3><ul>
+<li>Spring Security和spring依赖过于紧密，而且使用没有shiro来的简单。</li>
+<li>shiro不依赖与spring</li>
+<li>shiro不仅可以实现web应用的权限管理，还可以实现C/S系统、分布式系统权限管理</li>
+<li>shiro属于比较轻量，越来越多的企业中也在使用shiro</li>
+</ul>
+<hr>
+<h2 id="shiro的架构"><a href="#shiro的架构" class="headerlink" title="shiro的架构"></a>shiro的架构</h2><p><img src="https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&amp;quality=100&amp;size=b4000_4000&amp;sec=1471217447&amp;di=8346196df047c4d1393d513ab0c02d7b&amp;src=http://static.oschina.net/uploads/space/2014/0210/104057_NHqv_1417419.png" alt="shiro架构"></p>
+<ul>
+<li>subject<br>主体</li>
+<li>securityManager<br>安全管理器，主体访问和授权都是通过securityManager来进行，这是一个很大的容器？里面有很多的模块来实现相应的功能</li>
+<li>authenticator<br>认证器，主体进行认证最终通过authenticator来进行的</li>
+<li>authorizer<br>授权器，主体进行授权最终通过authorizer来进行</li>
+<li>sessionManager<br>web应用中，一般用中间件web容器对session进行管理。shiro自己也提供了一套session管理的方式。</li>
+<li>sessionDAO<br>通过sessionDAO来管理session数据，针对个性化的session数据存储，需要用到sessionDAO</li>
+<li>catchManager<br>缓存管理器，主要对session数据和授权数据进行缓存，比如将授权数据通过sessionManager进行缓存管理，和ehcache进行整合。管理的只是业务逻辑，真正的缓存操作还是要靠其他的框架来做。</li>
+<li>Realm（领域）<br>相当于数据源，通过realm来存取认证、授权的相关数据。<br>在realm中存在授权和认证的逻辑。</li>
+<li>cryptography<br>密钥、密码，就是一个安全加密的方法，提供了一套加密和解密的组件以供开发。比如md5散列算法，没办法解密</li>
+</ul>
+<hr>
+<h2 id="开始使用shiro"><a href="#开始使用shiro" class="headerlink" title="开始使用shiro"></a>开始使用shiro</h2><h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><ul>
+<li>JDK 1.7.0_79</li>
+<li>Maven 3.0.3</li>
+<li>Tomcat 7.0.39</li>
+<li><a href="http://www.apache.org/dyn/closer.cgi/shiro/1.3.0/shiro-root-1.3.0-source-release.zip" target="_blank" rel="external">Shiro 1.3.0</a></li>
+</ul>
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><ul>
+<li>解压源代码  </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ cd shiro-root-1.3.0\samples\quickstart</div><div class="line"></div><div class="line">// 执行java中的main函数</div><div class="line">$ mvn compile exec:java</div></pre></td></tr></table></figure>
+<h3 id="Subject"><a href="#Subject" class="headerlink" title="Subject"></a>Subject</h3><p>Subject 表示某一项（如一个人）的一组相关信息。此类信息包括 Subject 的身份，以及与安全相关的属性（例如，密码和加密密钥）。 </p>
+<p>Subject 可以潜在地具有多重身份。每个身份被表示为 Subject 中的一个 Principal。Principal 只是把名称绑定到 Subject。例如，Subject 正好是一个人（Alice）时,它可以有两个主体：一个把她驾驶证上的名称 “Alice Bar” 绑定到 Subject，另一个把学生身份证上的号码 “999-99-9999” 绑定到 Subject。即使每个主体具有不同的名称，它们也都指的是同一个 Subject。 </p>
+<p>Subject 也可以拥有与安全相关的属性，它们被称为证书。敏感的证书需要特殊的保护，例如私有加密密钥存储在私有的证书 Set 中。将证书设计为共享的，例如公钥证书或 Kerberos 服务票据存储在一个公开证书 Set 中。访问和修改不同的证书 Set 需要不同的权限。 </p>
+<h3 id="Quickstart-java"><a href="#Quickstart-java" class="headerlink" title="Quickstart.java"></a>Quickstart.java</h3><p>Quickstart.java中包含刚刚提到的所有内容(认证、授权等等)，通过这个简单的示例可以熟悉Shiro的API。   </p>
+<p>首先，几乎所有的环境下，都可以通过这种方式获取当前用户：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// get the currently executing user:</span></div><div class="line">Subject currentUser = SecurityUtils.getSubject();</div></pre></td></tr></table></figure></p>
+<p>通过SecurityUtils.getSubject()，就可以获取当前Subject。Subject是应用中用户的一个特定安全的缩影，虽然感觉上直接使用User会更贴切，但是实际上它的意义远远超过了User。而且每个应用程序都会有自己的用户以及框架，我们可不想和它们混淆在一起，况且Subject就是安全领域公认的名词。  </p>
+<p>在单应用系统中，调用getSubject()会返回一个Subject，它是位于应用程序中特定位置的用户信息；在服务器中运行的情况下(比如web应用)，getSubject会返回一个位于当前线程或请求中的用户信息。 现在你已经得到了Subject对象，那么用它可以做什么呢？</p>
+<h4 id="session"><a href="#session" class="headerlink" title="session"></a>session</h4><p>如果你想得到应用中用户当前Session的其他参数，可以这样获取Session对象：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Session session = currentUser.getSession();</div><div class="line"></div><div class="line">session.setAttribute( <span class="string">"someKey"</span>, <span class="string">"aValue"</span> );</div></pre></td></tr></table></figure></p>
+<p>这个Session对象是Shiro中<strong>特有</strong>的对象，它和我们经常使用的HttpSession非常相似，但还提供了额外的东西，其中与HttpSession最大的不同就是Shiro中的Session不依赖HTTP环境(换句话说，可以在非HTTP 容器下运行)。</p>
+<p>如果将Shiro部署在web应用程序中，那么这个Session就是基于HttpSession的。但是像QuickStart示例那样，在非web环境下使用，Shiro则默认使用EnterpriseSessionManagment。也就是说，不论在应用中的任何一层使用同样的API，却不需要考虑部署环境，这一优点为应用打开一个全新的世界，因为应用中要获取Session对象再也不用依赖于HttpSession或者EJB的会话Bean。而且任何客户端技术都可以共享session 数据。 </p>
+<p>现在你可以得到当前Subject和它的Session对象。那么我们如何验证比如角色和权限这些东西呢？</p>
+<p>很简单，可以通过已得到的user对象进行验证。Subject对象代表当前用户，但是，谁才是当前用户呢？他们可是匿名用户啊。也就是说，必须登录才能获取到当前用户。没问题，这样就可以搞定：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// let's login the current user so we can check against roles and permissions:</span></div><div class="line"><span class="keyword">if</span> (!currentUser.isAuthenticated()) &#123;</div><div class="line">    UsernamePasswordToken token = <span class="keyword">new</span> UsernamePasswordToken(<span class="string">"lonestarr"</span>, <span class="string">"vespa"</span>);</div><div class="line">    token.setRememberMe(<span class="keyword">true</span>);</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        currentUser.login(token);</div><div class="line">    &#125; <span class="keyword">catch</span> (UnknownAccountException uae) &#123;</div><div class="line">        log.info(<span class="string">"There is no user with username of "</span> + token.getPrincipal());</div><div class="line">    &#125; <span class="keyword">catch</span> (IncorrectCredentialsException ice) &#123;</div><div class="line">        log.info(<span class="string">"Password for account "</span> + token.getPrincipal() + <span class="string">" was incorrect!"</span>);</div><div class="line">    &#125; <span class="keyword">catch</span> (LockedAccountException lae) &#123;</div><div class="line">        log.info(<span class="string">"The account for username "</span> + token.getPrincipal() + <span class="string">" is locked.  "</span> +</div><div class="line">                <span class="string">"Please contact your administrator to unlock it."</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// ... catch more exceptions here (maybe custom ones specific to your application?</span></div><div class="line">    <span class="keyword">catch</span> (AuthenticationException ae) &#123;</div><div class="line">        <span class="comment">//unexpected condition?  error?</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>登陆过程中的异常会被捕获，不同的异常有对应的处理方式，也可以直接反馈给用户，说登陆错误请重新登陆，不用处理异常，直接让他重新登陆。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/shiro/" rel="tag">#shiro</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/08/DispatcherServlet前端控制器的配置/" rel="next" title="DispatcherServlet前端控制器的配置">
+                <i class="fa fa-chevron-left"></i> DispatcherServlet前端控制器的配置
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/08/10/权限管理原理知识/" rel="prev" title="shiro系列1-权限管理原理知识">
+                shiro系列1-权限管理原理知识 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/08/09/Shiro简介/"
+     data-title="shiro系列3-Shiro简介"
+     data-content=""
+     data-url="http://yoursite.com/2016/08/09/Shiro简介/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/08/09/Shiro简介/"
+           data-title="shiro系列3-Shiro简介" data-url="http://yoursite.com/2016/08/09/Shiro简介/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="戚志伟" />
+          <p class="site-author-name" itemprop="name">戚志伟</p>
+          <p class="site-description motion-element" itemprop="description">To be a better man.</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">29</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/zeewane" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-bus"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://weibo.com/zeewane" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zeewane" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是shiro"><span class="nav-number">1.</span> <span class="nav-text">什么是shiro</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#功能"><span class="nav-number">1.1.</span> <span class="nav-text">功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#发展历程"><span class="nav-number">1.2.</span> <span class="nav-text">发展历程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-Security"><span class="nav-number">1.3.</span> <span class="nav-text">Spring Security</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shiro的优势"><span class="nav-number">1.4.</span> <span class="nav-text">shiro的优势</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shiro的架构"><span class="nav-number">2.</span> <span class="nav-text">shiro的架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开始使用shiro"><span class="nav-number">3.</span> <span class="nav-text">开始使用shiro</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#下载"><span class="nav-number">3.1.</span> <span class="nav-text">下载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运行"><span class="nav-number">3.2.</span> <span class="nav-text">运行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Subject"><span class="nav-number">3.3.</span> <span class="nav-text">Subject</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Quickstart-java"><span class="nav-number">3.4.</span> <span class="nav-text">Quickstart.java</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#session"><span class="nav-number">3.4.1.</span> <span class="nav-text">session</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">戚志伟</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zeewane"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
